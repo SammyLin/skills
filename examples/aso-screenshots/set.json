@@ -1,0 +1,58 @@
+{
+  "app": "Binder",
+  "size": "6.9",
+  "idea": "The binder page becomes the price board.",
+  "palette": {
+    "ground": "#0F3D2E",
+    "ink": "#F3EFE4",
+    "accent": "#E8B931"
+  },
+  "type": {
+    "weight": 800
+  },
+  "proof": [],
+  "shots": [
+    {
+      "slug": "track-prices",
+      "headline": {
+        "en": "Know what your binder is worth",
+        "zh-TW": "一眼看懂卡冊值多少",
+        "ja": "カードの価値が一目で"
+      },
+      "screenshot": "sim/home.png",
+      "layout": "poster"
+    },
+    {
+      "slug": "value",
+      "headline": {
+        "en": "See the total, every morning",
+        "zh-TW": "每天早上看總值",
+        "ja": "毎朝、合計をチェック"
+      },
+      "screenshot": "sim/home.png",
+      "layout": "breakout",
+      "breakout": {
+        "x": 60,
+        "y": 330,
+        "w": 1086,
+        "h": 440
+      }
+    },
+    {
+      "slug": "cards",
+      "headline": {
+        "en": "Every card, priced",
+        "zh-TW": "每張卡都有行情",
+        "ja": "すべてのカードに相場を"
+      },
+      "screenshot": "sim/home.png",
+      "layout": "bleed"
+    }
+  ],
+  "inventory": [
+    "the binder page",
+    "a card's market price today",
+    "month-over-month gain"
+  ],
+  "locale": "en"
+}

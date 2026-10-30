@@ -1,0 +1,34 @@
+{
+  "name": "sammylin-skills",
+  "description": "Agent skills I use and trust: App Store screenshots, de-AI writing.",
+  "owner": {
+    "name": "Sammy Lin",
+    "url": "https://github.com/SammyLin"
+  },
+  "plugins": [
+    {
+      "name": "sammylin-skills",
+      "description": "aso-screenshots (App Store screenshot sets rendered at exact store sizes) and humanizer (remove signs of AI writing).",
+      "version": "0.1.0",
+      "source": "./",
+      "skills": [
+        "./skills/aso-screenshots",
+        "./skills/humanizer"
+      ],
+      "author": {
+        "name": "Sammy Lin",
+        "url": "https://github.com/SammyLin"
+      },
+      "license": "MIT",
+      "keywords": [
+        "skills",
+        "app-store",
+        "aso",
+        "screenshots",
+        "writing"
+      ],
+      "homepage": "https://github.com/SammyLin/skills",
+      "repository": "https://github.com/SammyLin/skills"
+    }
+  ]
+}
