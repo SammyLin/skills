@@ -1,4 +1,4 @@
-# aso-screenshots
+# store-screenshots
 
 Claude Code skill for App Store screenshot sets. A redesign of
 [adamlyttleapps/claude-skill-aso-appstore-screenshots](https://github.com/adamlyttleapps/claude-skill-aso-appstore-screenshots)
@@ -20,14 +20,14 @@ What changed from the original:
 | iPhone 6.7" | iPhone 6.9/6.7/6.5", iPad 13", Google Play phone |
 | Needs Gemini MCP, SF Pro font file, Pillow | Python 3 stdlib + Chrome |
 
-Use in Claude Code: `/aso-screenshots` (or `/aso-screenshots https://apps.apple.com/...`).
+Use in Claude Code: `/store-screenshots` (or `/store-screenshots https://apps.apple.com/...`).
 
 ## Try it
 
 ```bash
-cd examples/aso-screenshots   # from the repo root
-python3 ../../skills/aso-screenshots/render.py set.json               # final/*.png + sheet.png
-python3 ../../skills/aso-screenshots/render.py set.json --locale ja   # final/ja/
+cd examples/store-screenshots   # from the repo root
+python3 ../../skills/store-screenshots/render.py set.json               # final/*.png + sheet.png
+python3 ../../skills/store-screenshots/render.py set.json --locale ja   # final/ja/
 ```
 
 MIT. See the repo LICENSE.

@@ -1,18 +1,19 @@
 ---
-name: aso-screenshots
+name: store-screenshots
 description: >-
-  Design and render App Store screenshot sets that convert and do not look AI-made. Reads the app's
-  codebase and simulator screenshots, finds the 3-5 benefits that sell it, finds an idea only this
-  app has, then renders every shot deterministically in HTML/CSS via headless Chrome at exact App
-  Store Connect sizes (no image model redrawing the UI, no crop/resize step), gates each shot
-  against house rules (two-line headlines, contrast, no fake proof, no emoji, no gradients) and
-  critiques the set as it appears in search results. Use when the user asks for App Store / ASO
-  screenshots, store listing images, or wants existing screenshots redesigned.
+  Design and render App Store / Google Play screenshot sets that convert and do not look AI-made.
+  Reads the app's codebase to find the user benefits that sell it, plans what each screenshot must
+  convey as a storyboard, and renders nothing until the user approves that storyboard. Every shot is
+  rendered deterministically in HTML/CSS via headless Chrome at exact store sizes (no image model
+  redrawing the UI), gated against house rules (two-line headlines, contrast, no fake proof, no
+  emoji, no gradients) and critiqued as it appears in search results. Use when the user asks for
+  App Store / Google Play / ASO screenshots, store listing images (上架圖), or wants existing
+  screenshots redesigned.
 user-invocable: true
 argument-hint: "[App Store URL | screenshots folder | 'translate <locale>']"
 ---
 
-# ASO screenshots
+# Store screenshots
 
 An App Store set built on autopilot looks like every other set: a saturated background, a
 centred all-caps verb, a phone, sparkles, a "#1 app" claim, and a UI that an image model quietly
@@ -30,6 +31,19 @@ This skill makes the decisions on purpose and checks them:
 `<skill>` below is this skill's folder. Work happens in the app project's `screenshots/` folder.
 Needs Python 3 (stdlib only) and Google Chrome / Chromium (`CHROME=` to override the path).
 
+## Two stops before any image
+
+These are hard rules. Do not run `render.py` past them, not even "just to show an idea".
+
+1. **Storyboard stop (step 5).** Nothing is rendered until the user has approved the storyboard:
+   what every shot conveys, its headline, its screen and its layout. A "yes" to the benefits is not
+   a yes to the storyboard.
+2. **First-shot stop (step 6).** Render shot 1 alone, show it, and render the rest only after the
+   user says yes to it.
+
+Any later change to a shot's message, headline or screen goes back to the user as that row of the
+storyboard before it is rendered again. Approval of one step never carries over to the next.
+
 ## State lives in `screenshots/set.json`
 
 Everything this skill learns or decides goes into one file in the project, so a new conversation
@@ -45,6 +59,7 @@ decision; never keep state only in the conversation.
   "inventory": ["..."],
   "idea": "The binder page becomes the price board.",
   "direction": "field",
+  "storyboard_approved": false,
   "size": "6.9",
   "palette": { "ground": "#0F3D2E", "ink": "#F3EFE4", "accent": "#E8B931" },
   "type": { "family": "-apple-system, 'SF Pro Display', sans-serif", "weight": 800 },
@@ -91,6 +106,9 @@ what the best reviews say. Do not ask questions you can answer yourself.
 
 Draft 3-5 benefits as the set's argument: one claim per shot, in order, each proved by a screen.
 
+- **Found in the code, with evidence.** Each benefit names the screen, model or job that makes it
+  true (`PortfolioView.swift`, a nightly sync, an offline cache). Carry that evidence into the
+  storyboard.
 - **What the user gets, not what the app does.** "Know what your binder is worth", not "Portfolio
   tracking".
 - **Specific beats generic.** If you can swap in a competitor's name and it still reads true, it is
@@ -173,11 +191,39 @@ tracking -0.035em. A brand font goes in `type.family` with its stylesheet `<link
 the gate fails if it does not load. Sentence case reads more premium; `"case": "upper"` is
 available when the brand shouts.
 
-To compare directions, write shot 1 in two or three variants (copy `set.json` to
-`set.field.json`, `set.closeup.json`, ...) and render each with `--only 1 --out variants/<name>`.
-Show them side by side, let the user pick, delete the variant files.
+## 5. Storyboard (stop: wait for approval)
 
-## 5. Render
+Before any image exists, show the whole plan as one table, one row per shot, in store order. This
+is where the user decides what each screenshot says, so write it in the user's language and make
+every row concrete:
+
+```
+Idea: The binder page becomes the price board.
+Direction: field · ground #0F3D2E, ink #F3EFE4 · iPhone 6.9" · locales: en, zh-TW
+
+| # | What this shot must make the viewer believe | Evidence in the code | Headline | Screen | Layout |
+|---|---|---|---|---|---|
+| 1 | My whole collection has a live value | PortfolioView.swift: totalValue, daily refresh | Know what your binder is worth | sim/home.png | poster |
+| 2 | I see gains without doing anything | PriceSyncJob.swift runs at 6:00 | See the total, every morning | sim/home.png | breakout: value card |
+| 3 | Every single card is priced | CardRow shows marketPrice | Every card, priced | sim/list.png | bleed |
+```
+
+- **What the viewer must believe** is the user benefit in plain words, not a feature name.
+- **Evidence** names the file, screen or data that makes the benefit true. A benefit with no
+  evidence in the code is a promise the app does not keep; drop it or ask the user.
+- Below the table, list anything uncertain: proof claims awaiting confirmation, screens that need
+  a retake, sample data visible on a screen.
+
+Then ask plainly whether to render shot 1, and stop. Accept edits row by row and show the updated
+table again. Only an explicit yes (OK, go, 可以, 好) moves on; record it in `set.json` as
+`"storyboard_approved": true` and reset it to `false` whenever a row changes.
+
+If the user wants to see directions as pictures before choosing, that is a request to render:
+after the storyboard is approved, write shot 1 in two or three variants (`set.field.json`,
+`set.closeup.json`, ...), render each with `--only 1 --out variants/<name>`, show them side by
+side, let the user pick, delete the variant files.
+
+## 6. Render (stop: shot 1 first)
 
 ```bash
 python3 <skill>/render.py screenshots/set.json            # all shots + sheet.png
@@ -197,7 +243,8 @@ Output: `screenshots/final/NN-slug.png` at the exact size, plus `screenshots/she
 For another device, copy `set.json` with a different `size` and render with `--out final/<device>`.
 Use that device's own captures; an iPad set should show iPad screens (`bleed` suits them best).
 
-**Render shot 1 first** (`--only 1`), show it, and get a yes before rendering the rest.
+**Render shot 1 first** (`--only 1`), fix it until it passes the gate, show it, and stop. Render
+the rest only after the user says yes to shot 1.
 
 Per-shot keys: `headline`, `screenshot`, `layout`, and optional `size` (headline px at 1290 width,
 default 150), `ground` / `ink` (field colour override for `chapters`), `breakout`
@@ -221,7 +268,7 @@ two lines. Japanese breaks at phrases and Korean at words automatically. When th
 localized, capture each language's screens and copy `set.json` per locale (`set.ja.json`) pointing
 at them, so the UI matches the headline.
 
-## 6. Gate
+## 7. Gate
 
 `render.py` prints `[ok]` or `[FAIL]` per shot and exits non-zero on any FAIL. It fails:
 
@@ -240,7 +287,7 @@ glows, no shadow on anything at rest (only the breakout panel has one), no decor
 sparkles, arrows or blobs, no pill badge or small label above the headline, no styled accent word
 in the headline (one face, one colour), no invented UI.
 
-## 7. Look
+## 8. Look
 
 Passing the gate means nothing banned was measured, not that the set is good. Read
 `screenshots/sheet.png`, then each final at full size. Make each pass on its own:
@@ -272,7 +319,7 @@ Fix the top three, render, look again. Three rounds at most. Then show the user 
 finals; let them approve, request changes per shot, or swap directions. Mark approved shots
 `"status": "approved"` in `set.json`.
 
-## 8. Report
+## 9. Report
 
 Tell the user, briefly: the idea sentence and the direction with its reason; the final round's
 scores and what still falls short; the files in `screenshots/final/` and which App Store Connect

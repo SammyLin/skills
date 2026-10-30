@@ -8,11 +8,11 @@
   "plugins": [
     {
       "name": "sammylin-skills",
-      "description": "aso-screenshots (App Store screenshot sets rendered at exact store sizes) and humanizer (remove signs of AI writing).",
+      "description": "store-screenshots (App Store screenshot sets rendered at exact store sizes) and humanizer (remove signs of AI writing).",
       "version": "0.1.0",
       "source": "./",
       "skills": [
-        "./skills/aso-screenshots",
+        "./skills/store-screenshots",
         "./skills/humanizer"
       ],
       "author": {
