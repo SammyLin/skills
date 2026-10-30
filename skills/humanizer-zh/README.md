@@ -1,24 +1,32 @@
 # humanizer-zh
 
-把 AI 寫的中文改得像台灣人寫的。以 [nagameTW/formosa-humanizer](https://github.com/nagameTW/formosa-humanizer) 為基礎：49 種 AI 寫作模式、中文全形標點保護、中國用語對照、提示注入防護都沿用原作。
+English · [繁體中文](README.zh-TW.md)
 
-這一版加了 `scripts/check.py`，把字串比對就能確定的痕跡交給程式抓，模型專心處理需要判斷的部分。改寫前先跑一次找問題，定稿後再跑一次確認「必修」歸零。
+Rewrites AI-generated Chinese so it reads like a person in Taiwan wrote it. Built on
+[nagameTW/formosa-humanizer](https://github.com/nagameTW/formosa-humanizer), which keeps the
+49 AI-writing patterns, full-width punctuation protection, the mainland-term glossary and the
+prompt-injection boundary. The skill itself is written in Chinese, because it edits Chinese text.
 
-| 類別 | 抓什麼 | 結束碼 |
+This version adds `scripts/check.py`, which catches what string matching can decide so the model
+can spend its attention on what needs judgement. The rewrite loop runs it before rewriting to find
+problems, and again on the final text, where every "must fix" has to be gone.
+
+| Kind | What it flags | Exit code |
 | --- | --- | --- |
-| 標點 | 中文句子裡的半形 `, . ? ! : ;` 與直／彎引號 | 必修 |
-| 破折 | 貼著中文的單個 `—` 或 `–`（「——」與 1939–1945 不算） | 必修 |
-| 殘留 | `utm_source=chatgpt.com`、`turn0search0`、`citeturn`、`【1†source】`、`[產品名稱]` | 必修 |
-| 驚嘆 | `！！`、`!!` | 必修 |
-| 簡體 | 常見簡體字 | 必修 |
-| 用語 | 對照表裡的中國用語與商業黑話 | 需判斷 |
-| 詞彙 | 「賦能」「彰顯」這類高頻 AI 詞，只報次數 | 參考 |
+| Punctuation | Half-width `, . ? ! : ;` and straight or curly quotes inside Chinese sentences | must fix |
+| Dash | A single `—` or `–` touching Chinese (the paired Chinese dash `——` and ranges like 1939–1945 pass) | must fix |
+| Residue | `utm_source=chatgpt.com`, `turn0search0`, `citeturn`, `【1†source】`, unfilled `[產品名稱]` | must fix |
+| Exclamation | `！！`, `!!` | must fix |
+| Simplified | Common simplified characters | must fix |
+| Terms | Mainland terms and business jargon from the glossary | judgement (quotes and proper nouns may stay) |
+| AI words | Words like 賦能 and 彰顯; counted only | for reference |
 
 ```bash
-python3 scripts/check.py 稿件.md
+python3 scripts/check.py draft.md
 python3 scripts/check.py --self-test
 ```
 
-在 Claude Code 裡：`/humanizer-zh`，或直接說「幫我把這段去 AI 味」。
+Use it in Claude Code: `/humanizer-zh`, or say "幫我把這段去 AI 味" ("take the AI flavour out of
+this").
 
-授權：MIT。原作著作權與致謝見 `NOTICE`。
+MIT. The original authors' copyright and credits are in `NOTICE`.

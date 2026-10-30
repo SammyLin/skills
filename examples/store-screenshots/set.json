@@ -54,5 +54,6 @@
     "a card's market price today",
     "month-over-month gain"
   ],
-  "locale": "en"
+  "locale": "en",
+  "storyboard_approved": true
 }

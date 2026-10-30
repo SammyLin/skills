@@ -23,6 +23,7 @@ import struct
 import subprocess
 import sys
 import tempfile
+import unicodedata
 import zlib
 
 SIZES = {
@@ -307,8 +308,10 @@ def gate(spec, shot, rep, W, locale=None):
     m = PROOF.search(text)
     if m and not any(m.group(0).lower() in p for p in real_proof):
         fails.append(f"proof claim '{m.group(0)}' not listed in set.json proof[]")
-    if len(text) > 40:
-        warns.append(f"headline {len(text)} chars (aim ≤ 32)")
+    # CJK and full-width characters set about twice as wide as Latin ones.
+    width = sum(2 if unicodedata.east_asian_width(c) in "WF" else 1 for c in text)
+    if width > 40:
+        warns.append(f"headline {width} width units (aim ≤ 32; a CJK character counts 2)")
     if rep["headlineBottom"] > W * 0.62:
         warns.append("headline block is tall; device starts low")
     return fails, warns
@@ -325,6 +328,10 @@ def main():
     spec_dir = os.path.dirname(os.path.abspath(a.spec))
     with open(a.spec) as f:
         spec = json.load(f)
+    # The storyboard stop in SKILL.md, enforced: no image before the user approves the plan.
+    if spec.get("storyboard_approved") is not True:
+        sys.exit("Storyboard not approved: show the user the storyboard (SKILL.md step 5) and set "
+                 '"storyboard_approved": true in set.json only after they say yes.')
     os.chdir(spec_dir)  # screenshot paths in set.json are relative to it
     W, H = SIZES[str(spec.get("size", "6.9"))]
     out_dir = os.path.abspath(a.out or os.path.join("final", a.locale or ""))

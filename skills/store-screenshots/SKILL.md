@@ -28,12 +28,18 @@ This skill makes the decisions on purpose and checks them:
 4. **A gate and a look.** `render.py` measures each shot and fails what breaks the rules; then you
    look at `sheet.png` (the set at search-result size, light and dark) and critique it.
 
+Talk to the user in their language (a user writing in Chinese gets the benefits, storyboard and
+critique in Chinese). Headlines are written in each store locale's language, whatever the
+conversation's language.
+
 `<skill>` below is this skill's folder. Work happens in the app project's `screenshots/` folder.
 Needs Python 3 (stdlib only) and Google Chrome / Chromium (`CHROME=` to override the path).
 
 ## Two stops before any image
 
 These are hard rules. Do not run `render.py` past them, not even "just to show an idea".
+`render.py` refuses to run until `set.json` has `"storyboard_approved": true`; set it only after
+the user's explicit yes, never to get past the check.
 
 1. **Storyboard stop (step 5).** Nothing is rendered until the user has approved the storyboard:
    what every shot conveys, its headline, its screen and its layout. A "yes" to the benefits is not

@@ -1,6 +1,6 @@
 {
   "name": "sammylin-skills",
-  "description": "Agent skills I use and trust: store screenshots, de-AI writing in English and Chinese.",
+  "description": "Agent skills I use and trust: store screenshots, de-AI writing in English and Chinese, frontend taste.",
   "owner": {
     "name": "Sammy Lin",
     "url": "https://github.com/SammyLin"
@@ -8,14 +8,20 @@
   "plugins": [
     {
       "name": "sammylin-skills",
-      "description": "store-screenshots (App Store / Google Play screenshot sets rendered at exact store sizes), humanizer (remove signs of AI writing) and humanizer-zh (the same for Traditional Chinese). Plus taste-skill v2 experimental (frontend art direction).",
+      "description": "store-screenshots and humanizer-zh (my own), humanizer, and the taste-skill classics for frontend art direction.",
       "version": "0.1.0",
       "source": "./",
       "skills": [
-        "./skills/store-screenshots",
+        "./skills/design-taste-frontend-v1",
+        "./skills/design-taste-frontend-v2-experimental",
+        "./skills/gpt-taste",
+        "./skills/high-end-visual-design",
         "./skills/humanizer",
         "./skills/humanizer-zh",
-        "./skills/taste-skill-v2-experimental"
+        "./skills/industrial-brutalist-ui",
+        "./skills/minimalist-ui",
+        "./skills/stitch-design-taste",
+        "./skills/store-screenshots"
       ],
       "author": {
         "name": "Sammy Lin",
