@@ -21,6 +21,10 @@ Documented in English and Traditional Chinese; they answer in the language you w
 
 ![store-screenshots example set](docs/images/store-screenshots-sheet.webp)
 
+**grill-me**: a round of questions in Claude Code's dialog, after it has read the code.
+
+![grill-me question](docs/images/grill-me-question.webp)
+
 ## Vendored skills
 
 Copied unchanged with their licences. The taste-skill classics are opt-in: they run only when

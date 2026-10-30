@@ -7,6 +7,11 @@ Stress-tests a plan before you build it. Based on Matt Pocock's
 shapes the result, but you answer by picking options, the small stuff is decided for you out loud,
 and it follows up on what each of your answers changes.
 
+![A grill-me question in Claude Code's dialog](../../docs/images/grill-me-question.webp)
+
+*A real round: it read the code first (view counts already exist, without de-duplication; GA4 runs
+too), then asked what "counting" means, with the cost of each option.*
+
 | | grill-with-docs | grill-me |
 | --- | --- | --- |
 | What it asks | Every open decision, until the tree is empty | Major decisions first (hard to reverse; users, money or security; blocking; a real fork; a contradiction), then medium ones (scope, behaviour users notice, trade-offs with a cost) |

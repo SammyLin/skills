@@ -20,6 +20,10 @@
 
 ![store-screenshots 範例](docs/images/store-screenshots-sheet-zh-TW.webp)
 
+**grill-me**：讀過程式碼之後，在 Claude Code 選擇題介面裡問的一輪問題。
+
+![grill-me 提問](docs/images/grill-me-question.webp)
+
 ## 收錄的 skill
 
 原樣複製，保留各自的授權。taste-skill classics 都要點名才會執行（例如 `/minimalist-ui`），不會自動啟動。
