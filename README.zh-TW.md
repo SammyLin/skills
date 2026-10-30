@@ -41,6 +41,15 @@
 
 ![ip-as-logo 範例](skills/ip-as-logo/assets/ip-as-logo-wall.webp)
 
+**taste-skill classics**：同一份需求（Harbor，家庭共用的購物清單與晚餐規劃 App）分別用各 skill 做出的頁面，1440px 寬、前 1800px。這些頁面是為這份 README 做的，不是上游作者的作品。
+
+<table>
+<tr><td width="50%"><img src="docs/images/taste-high-end-visual-design.webp" alt="high-end-visual-design"><br><code>high-end-visual-design</code> · 沉穩精緻</td><td width="50%"><img src="docs/images/taste-minimalist-ui.webp" alt="minimalist-ui"><br><code>minimalist-ui</code> · 編輯感極簡</td></tr>
+<tr><td width="50%"><img src="docs/images/taste-industrial-brutalist-ui.webp" alt="industrial-brutalist-ui"><br><code>industrial-brutalist-ui</code> · 硬派機械風</td><td width="50%"><img src="docs/images/taste-gpt-taste.webp" alt="gpt-taste"><br><code>gpt-taste</code> · GPT 嚴格版</td></tr>
+<tr><td width="50%"><img src="docs/images/taste-stitch-design-taste.webp" alt="stitch-design-taste"><br><code>stitch-design-taste</code> · Stitch 設計系統</td><td width="50%"><img src="docs/images/taste-design-taste-frontend-v2-experimental.webp" alt="design-taste-frontend-v2-experimental"><br><code>design-taste-frontend-v2-experimental</code> · taste v2 實驗版</td></tr>
+<tr><td width="50%"><img src="docs/images/taste-design-taste-frontend-v1.webp" alt="design-taste-frontend-v1"><br><code>design-taste-frontend-v1</code> · taste v1</td></tr>
+</table>
+
 ## 安裝
 
 ```bash

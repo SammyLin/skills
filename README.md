@@ -43,6 +43,16 @@ called by name (`/minimalist-ui`).
 
 ![ip-as-logo examples](skills/ip-as-logo/assets/ip-as-logo-wall.webp)
 
+**taste-skill classics**: the same brief (Harbor, a shared grocery and dinner-planning app) built
+with each skill, top 1800px at 1440px wide. Pages made for this README, not by the upstream author.
+
+<table>
+<tr><td width="50%"><img src="docs/images/taste-high-end-visual-design.webp" alt="high-end-visual-design"><br><code>high-end-visual-design</code> · Calm, polished</td><td width="50%"><img src="docs/images/taste-minimalist-ui.webp" alt="minimalist-ui"><br><code>minimalist-ui</code> · Editorial minimal</td></tr>
+<tr><td width="50%"><img src="docs/images/taste-industrial-brutalist-ui.webp" alt="industrial-brutalist-ui"><br><code>industrial-brutalist-ui</code> · Industrial brutalist</td><td width="50%"><img src="docs/images/taste-gpt-taste.webp" alt="gpt-taste"><br><code>gpt-taste</code> · GPT taste</td></tr>
+<tr><td width="50%"><img src="docs/images/taste-stitch-design-taste.webp" alt="stitch-design-taste"><br><code>stitch-design-taste</code> · Stitch DESIGN.md</td><td width="50%"><img src="docs/images/taste-design-taste-frontend-v2-experimental.webp" alt="design-taste-frontend-v2-experimental"><br><code>design-taste-frontend-v2-experimental</code> · taste v2 experimental</td></tr>
+<tr><td width="50%"><img src="docs/images/taste-design-taste-frontend-v1.webp" alt="design-taste-frontend-v1"><br><code>design-taste-frontend-v1</code> · taste v1</td></tr>
+</table>
+
 ## Install
 
 ```bash
