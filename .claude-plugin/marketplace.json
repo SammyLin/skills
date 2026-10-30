@@ -8,13 +8,14 @@
   "plugins": [
     {
       "name": "sammylin-skills",
-      "description": "store-screenshots (App Store / Google Play screenshot sets rendered at exact store sizes), humanizer (remove signs of AI writing) and humanizer-zh (the same for Traditional Chinese).",
+      "description": "store-screenshots (App Store / Google Play screenshot sets rendered at exact store sizes), humanizer (remove signs of AI writing) and humanizer-zh (the same for Traditional Chinese). Plus taste-skill v2 experimental (frontend art direction).",
       "version": "0.1.0",
       "source": "./",
       "skills": [
         "./skills/store-screenshots",
         "./skills/humanizer",
-        "./skills/humanizer-zh"
+        "./skills/humanizer-zh",
+        "./skills/taste-skill-v2-experimental"
       ],
       "author": {
         "name": "Sammy Lin",
@@ -28,7 +29,9 @@
         "screenshots",
         "writing",
         "chinese",
-        "zh-tw"
+        "zh-tw",
+        "frontend",
+        "design"
       ],
       "homepage": "https://github.com/SammyLin/skills",
       "repository": "https://github.com/SammyLin/skills"
