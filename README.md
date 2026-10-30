@@ -5,6 +5,7 @@ Agent skills I use and trust, in one place. Each lives in `skills/<name>/` with 
 | Skill | What it does | Origin |
 | --- | --- | --- |
 | [`store-screenshots`](skills/store-screenshots/) | App Store / Google Play screenshot sets: benefits, an idea from the app, deterministic HTML render at exact store sizes, a gate and a critique. Localized. | Own; redesigned from [adamlyttleapps](https://github.com/adamlyttleapps/claude-skill-aso-appstore-screenshots) with ideas from [taste-skill](https://github.com/leonxlnx/taste-skill), [shots](https://github.com/hypersocialinc/shots), [store-screenshots](https://github.com/LeeHueeng/store-screenshots) |
+| [`humanizer-zh`](skills/humanizer-zh/) | 把 AI 寫的中文改得像台灣人寫的：49 種模式、全形標點保護、中國用語對照，加上機械檢查腳本。 | Own; built on [nagameTW/formosa-humanizer](https://github.com/nagameTW/formosa-humanizer), MIT |
 | [`humanizer`](skills/humanizer/) | Removes signs of AI-generated writing from text (Wikipedia's "Signs of AI writing"). | [blader/humanizer](https://github.com/blader/humanizer), MIT, vendored unchanged |
 
 ## Install

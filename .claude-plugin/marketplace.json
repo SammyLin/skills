@@ -1,6 +1,6 @@
 {
   "name": "sammylin-skills",
-  "description": "Agent skills I use and trust: App Store screenshots, de-AI writing.",
+  "description": "Agent skills I use and trust: store screenshots, de-AI writing in English and Chinese.",
   "owner": {
     "name": "Sammy Lin",
     "url": "https://github.com/SammyLin"
@@ -8,12 +8,13 @@
   "plugins": [
     {
       "name": "sammylin-skills",
-      "description": "store-screenshots (App Store screenshot sets rendered at exact store sizes) and humanizer (remove signs of AI writing).",
+      "description": "store-screenshots (App Store / Google Play screenshot sets rendered at exact store sizes), humanizer (remove signs of AI writing) and humanizer-zh (the same for Traditional Chinese).",
       "version": "0.1.0",
       "source": "./",
       "skills": [
         "./skills/store-screenshots",
-        "./skills/humanizer"
+        "./skills/humanizer",
+        "./skills/humanizer-zh"
       ],
       "author": {
         "name": "Sammy Lin",
@@ -25,7 +26,9 @@
         "app-store",
         "aso",
         "screenshots",
-        "writing"
+        "writing",
+        "chinese",
+        "zh-tw"
       ],
       "homepage": "https://github.com/SammyLin/skills",
       "repository": "https://github.com/SammyLin/skills"
