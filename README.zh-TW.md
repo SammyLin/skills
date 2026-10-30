@@ -13,12 +13,19 @@
 | [`store-screenshots`](skills/store-screenshots/) | App Store 與 Google Play 上架圖：從程式碼找出使用者利益，先給你確認分鏡表才產圖，用 App 真實畫面產出商店規格尺寸，附檢查與評分，支援多語系。 | 改寫自 [adamlyttleapps](https://github.com/adamlyttleapps/claude-skill-aso-appstore-screenshots)，參考 [taste-skill](https://github.com/leonxlnx/taste-skill)、[shots](https://github.com/hypersocialinc/shots)、[store-screenshots](https://github.com/LeeHueeng/store-screenshots) |
 | [`humanizer-zh`](skills/humanizer-zh/) | 把中文文字的 AI 味拿掉，寫給台灣讀者：49 種模式、全形標點、中國用語對照，加上機械檢查腳本。 | 以 [nagameTW/formosa-humanizer](https://github.com/nagameTW/formosa-humanizer) 為基礎，MIT |
 
+### 成品範例
+
+**store-screenshots**：範例上架圖在搜尋結果裡的樣子，上排淺色、下排深色（示範用的假 App）。
+
+![store-screenshots 範例](docs/images/store-screenshots-sheet-zh-TW.webp)
+
 ## 收錄的 skill
 
 原樣複製，保留各自的授權。taste-skill classics 都要點名才會執行（例如 `/minimalist-ui`），不會自動啟動。
 
 | Skill | 用途 | 來源 |
 | --- | --- | --- |
+| [`ip-as-logo`](skills/ip-as-logo/) | 極簡、可愛、能直接當 logo 的吉祥物角色：先提三個方向，再產六張候選，角色從左下角探出來。 | [s1dashu/ip-as-logo-skill](https://github.com/s1dashu/ip-as-logo-skill) |
 | [`humanizer`](skills/humanizer/) | 去除英文文字的 AI 寫作痕跡，依據維基百科「Signs of AI writing」。 | [blader/humanizer](https://github.com/blader/humanizer) |
 | [`high-end-visual-design`](skills/high-end-visual-design/) | 沉穩精緻的介面：柔和對比、大量留白、彈性動畫。 | [taste-skill-classics](https://github.com/Leonxlnx/taste-skill-classics) |
 | [`minimalist-ui`](skills/minimalist-ui/) | 編輯感的產品介面，色彩克制、結構俐落。 | taste-skill-classics |
@@ -27,6 +34,12 @@
 | [`stitch-design-taste`](skills/stitch-design-taste/) | Google Stitch 用的規則，可另外匯出 `DESIGN.md`。 | taste-skill-classics |
 | [`design-taste-frontend-v2-experimental`](skills/design-taste-frontend-v2-experimental/) | v2 之前的預設版本：單一檔案，用參數調整風格。 | taste-skill-classics |
 | [`design-taste-frontend-v1`](skills/design-taste-frontend-v1/) | 最早的 taste-skill。 | taste-skill-classics |
+
+### 成品範例
+
+**ip-as-logo**（取自上游 repo）：
+
+![ip-as-logo 範例](skills/ip-as-logo/assets/ip-as-logo-wall.webp)
 
 ## 安裝
 
@@ -53,7 +66,8 @@ npx skills update -g
 1. 建立 `skills/<名稱>/SKILL.md`，frontmatter 要有 `name` 與 `description`，資料夾名稱要等於 `name`。
 2. 在這份與 `README.md` 的表格各加一列。
 3. 自己寫的 skill：附上 `README.md` 與 `README.zh-TW.md`。
-4. 別人的 skill：授權允許才收，`LICENSE` 放在它的資料夾裡，並註明出處。
+4. 會產出視覺成品的 skill：在 `docs/images/` 放一張範例圖，中英文 README 都要附上（圖放在 `skills/` 之外，安裝時才不會一起裝）。
+5. 別人的 skill：授權允許才收，`LICENSE` 放在它的資料夾裡，並註明出處。
 
 ## 授權
 

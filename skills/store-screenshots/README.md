@@ -6,6 +6,10 @@ App Store and Google Play screenshot sets for Claude Code. It reads your app's c
 benefits that sell it, plans what each screenshot must say, waits for your approval, then renders
 every shot at the exact store size from your real app screens.
 
+![Example set on light and dark](../../docs/images/store-screenshots-sheet.webp)
+
+*The example set (mock app) as it appears in search results, light and dark.*
+
 ## How it works
 
 1. **Read the app.** Screens, models, paywall, onboarding; the live listing too if the app is

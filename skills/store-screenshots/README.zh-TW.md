@@ -4,6 +4,10 @@
 
 給 Claude Code 用的 App Store 與 Google Play 上架圖 skill。它讀你的 App 程式碼，找出能說服人下載的使用者利益，規劃每張上架圖要傳達什麼，等你確認後，再用 App 的真實畫面產出符合商店規格的圖。
 
+![範例上架圖，淺色與深色背景](../../docs/images/store-screenshots-sheet-zh-TW.webp)
+
+*範例上架圖（示範用的假 App）在搜尋結果裡的樣子，上排淺色、下排深色。*
+
 ## 流程
 
 1. **讀 App**：畫面、資料模型、付費牆、新手引導；App 已經上架的話，也會讀現有的商店頁。

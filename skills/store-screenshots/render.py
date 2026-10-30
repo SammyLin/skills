@@ -109,6 +109,9 @@ PAGE = """<!doctype html>
   const hb = h1.getBoundingClientRect();
   const holder = document.querySelector('.device, .bleed');
   holder.style.top = Math.round(hb.bottom + {gap}) + 'px';
+  // A short headline lifts the device; grow it so it still bleeds off the bottom edge.
+  const d = holder.getBoundingClientRect();
+  if (d.bottom < H + 40) holder.style.width = (d.width * (H + 40 - d.top) / d.height) + 'px';
 
   const crop = {crop};
   if (crop) {{
