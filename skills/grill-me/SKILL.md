@@ -43,26 +43,46 @@ existing stack, copy, styling, error messages, defaults that are cheap to change
 When unsure, it is minor. A wrong minor default costs one edit; a pointless question costs the
 user's attention.
 
-## 2. Ask in short rounds
+## 2. Ask in short rounds, as choices
 
 Ask the major decisions whose prerequisites are settled, **at most four per round**, most
-consequential first. Put the minor ones in the same message as a list of defaults the user can
-skim. Format:
+consequential first. The user should answer by picking, not by typing.
+
+**With a choice tool** (Claude Code: `AskUserQuestion`; any agent's equivalent), one call per
+round, one question per major decision:
+
+- **Stand alone.** The dialog may hide everything you wrote before it, so each question names the
+  decision and the fact that makes it matter ("The orders table is shared with billing: should
+  refunds…"), in one or two sentences.
+- **2-4 options**, each a real choice with its cost in the description. Your recommendation is
+  the first option, its label ending in "(Recommended)". Do not add an "Other" option; the tool
+  adds one for free text.
+- **Short header** (a few words) naming the decision, so the user sees at a glance what each tab is.
+- **`preview`** when options are concrete artifacts worth comparing side by side: two schemas, two
+  API shapes, two folder layouts.
+- **`multiSelect`** only when the choices genuinely combine (which platforms to support), never
+  for either/or decisions.
+- **Defaults.** Before the call, list the minor decisions you are settling yourself in a short
+  text block. If the round has a free slot, use it for one question: "Use these defaults: <the
+  list in one line>?" with options "Use them (Recommended)" and "I want to change some". If the
+  user wants changes, ask which in the next round.
+
+**Without a choice tool**, write the round as numbered questions with lettered options so the user
+can answer in one line ("1A 2B 3A"):
 
 ```
-**Q1 · <title>**: <the decision, the options, and what each costs>
-→ Recommended: <your answer, one line on why>
+**1 · <title>**: <the decision and why it matters>
+  A. <option> (Recommended): <cost>
+  B. <option>: <cost>
 
-**Q2 · <title>**: ...
-→ Recommended: ...
+**2 · <title>**: ...
 
 **Defaults I'll use unless you say otherwise**
 - <decision>: <default>
-- ...
 ```
 
-Word each question so "yes" accepts your recommendation. Do not ask a question whose answer
-depends on another question still open in the same round; it waits for the next round.
+Either way, never put in one round a question whose answer depends on another question still
+open in the same round; it waits for the next round.
 
 Each answer can make a minor decision major or settle several at once. Re-sort after every round.
 Aim to be done in **three rounds or fewer**. If major questions are still coming after three, say
@@ -104,7 +124,10 @@ When no major decision is open, finish with one summary:
 - <anything deliberately left for later>
 ```
 
-Then stop and wait. Do not start building until the user confirms the summary.
+Then ask for the go-ahead the same way as the rounds: with a choice tool, one question ("Build
+with this plan?") with options such as "Yes, start (Recommended)", "Change something first" and
+"Stop here, plan only"; without one, a one-line question. Do not start building until the user
+picks yes.
 
 ---
 
