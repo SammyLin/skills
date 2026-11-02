@@ -8,7 +8,7 @@
   "plugins": [
     {
       "name": "sammylin-skills",
-      "description": "store-screenshots, humanizer-zh and grill-me (my own), humanizer, ip-as-logo, and the taste-skill classics for frontend art direction.",
+      "description": "store-screenshots, humanizer-zh, grill-me and peer-review (my own), humanizer, ip-as-logo, and the taste-skill classics for frontend art direction.",
       "version": "0.1.0",
       "source": "./",
       "skills": [
@@ -22,6 +22,7 @@
         "./skills/industrial-brutalist-ui",
         "./skills/ip-as-logo",
         "./skills/minimalist-ui",
+        "./skills/peer-review",
         "./skills/stitch-design-taste",
         "./skills/store-screenshots"
       ],
@@ -42,7 +43,8 @@
         "design",
         "logo",
         "mascot",
-        "planning"
+        "planning",
+        "code-review"
       ],
       "homepage": "https://github.com/SammyLin/skills",
       "repository": "https://github.com/SammyLin/skills"

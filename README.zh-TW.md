@@ -13,6 +13,7 @@
 | [`store-screenshots`](skills/store-screenshots/) | App Store 與 Google Play 上架圖：從程式碼找出使用者利益，先給你確認分鏡表才產圖，用 App 真實畫面產出商店規格尺寸，附檢查與評分，支援多語系。 | 改寫自 [adamlyttleapps](https://github.com/adamlyttleapps/claude-skill-aso-appstore-screenshots)，參考 [taste-skill](https://github.com/leonxlnx/taste-skill)、[shots](https://github.com/hypersocialinc/shots)、[store-screenshots](https://github.com/LeeHueeng/store-screenshots) |
 | [`humanizer-zh`](skills/humanizer-zh/) | 把中文文字的 AI 味拿掉，寫給台灣讀者：49 種模式、全形標點、中國用語對照，加上機械檢查腳本。 | 以 [nagameTW/formosa-humanizer](https://github.com/nagameTW/formosa-humanizer) 為基礎，MIT |
 | [`grill-me`](skills/grill-me/) | 開工前拷問計畫：重大與中等的決策都用選擇題問你，並追問每個答案帶來的影響，只有小事自己決定，值得記錄的才寫 ADR。 | 改寫自 Matt Pocock 的 [`grill-with-docs`](https://github.com/mattpocock/skills)，MIT |
+| [`peer-review`](skills/peer-review/) | 把分支的改動分成規範和需求兩條線各自審查，換另一個 model 來審（先找 Antigravity，再找 Codex 或 Claude），需求從 GitHub issue 或 Azure DevOps work item 抓。 | 改寫自 Matt Pocock 的 [`code-review`](https://github.com/mattpocock/skills)，MIT |
 
 ### 成品範例
 
