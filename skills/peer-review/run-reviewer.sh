@@ -28,8 +28,19 @@ before=$(snapshot)
 
 run() { # $1 = reviewer; stdout -> $out, stderr -> $out.$1.err
   case $1 in
-    agy)    agy --mode plan --settings '{"permissions":{"allow":["command(git)"]}}' \
-              -p "$(cat "$brief")" > "$out" ;;
+    # Print mode auto-denies any command outside the allow list, the turn ends with only a
+    # preamble like "I'll start by checking the diff", and agy still exits 0 with nothing on
+    # stderr. The denial shows up only in its log, so fail on it there.
+    # Not --mode plan: there agy may write a plan and stop to wait for "Proceed". Read-only comes
+    # from denying write_file and allowing only read-only commands (rules match by token prefix,
+    # so plain `git` or `find` would also let through `git reset --hard` or `find -delete`).
+    agy)    agy --log-file "$out.agy.log" --settings \
+              '{"permissions":{"deny":["write_file(*)"],"allow":["command(git diff)","command(git log)","command(git show)","command(git status)","command(git rev-parse)","command(git ls-files)","command(git blame)","command(ls)","command(cat)","command(head)","command(tail)","command(grep)","command(rg)","command(wc)"]}}' \
+              -p "$(cat "$brief")
+
+Shell commands allowed: git diff/log/show/status/rev-parse/ls-files/blame, ls, cat, head, tail, grep, rg, wc. Any other command is denied. To find files, use ls, git ls-files or your built-in file tools, not find." \
+              > "$out" || return
+            ! grep 'soft-denying' "$out.agy.log" >&2 ;;
     codex)  codex exec -s read-only -C "$repo" -o "$out" - < "$brief" > /dev/null ;;
     claude) claude -p --permission-mode plan < "$brief" > "$out" ;;
   esac 2> "$out.$1.err"
