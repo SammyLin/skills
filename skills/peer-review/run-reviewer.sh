@@ -6,14 +6,14 @@
 # Last stdout line: "reviewer=<name>" on success (exit 0),
 # or "reviewer=none" when every external reviewer failed (exit 1).
 # Each attempt's stderr goes to <out-file>.<name>.err.
-# Each reviewer gets PEER_REVIEW_TIMEOUT seconds (default 480), then is killed and the next one runs.
+# Each reviewer gets PEER_REVIEW_TIMEOUT seconds (default 900), then is killed and the next one runs.
 # macOS has no `timeout`, so perl's alarm does it: exit 142 means timed out.
 set -u
 
 [ "${1:-}" = "--self" ] && [ $# -eq 4 ] || {
   echo "usage: $0 --self <claude|codex|agy|other> <brief-file> <out-file>" >&2; exit 2; }
 self=$2 brief=$3 out=$4
-limit=${PEER_REVIEW_TIMEOUT:-480}
+limit=${PEER_REVIEW_TIMEOUT:-900}
 tlim() { perl -e 'alarm shift; exec @ARGV or die "exec $ARGV[0]: $!\n"' "$limit" "$@"; }
 [ -s "$brief" ] || { echo "brief missing or empty: $brief" >&2; exit 2; }
 

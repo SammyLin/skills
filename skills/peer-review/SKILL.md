@@ -124,8 +124,9 @@ CLI's read-only flags, tries reviewers in order, and checks the reviewer's own e
 - A `WARNING: repo changed` line means a reviewer touched the repo: tell the user, show
   `git status`.
 
-Each reviewer gets 8 minutes, then the script kills it (`fail <name>: timed out`) and moves to the
-next; set `PEER_REVIEW_TIMEOUT=<seconds>` to change that for a very large diff. Don't build the
+Each reviewer gets 15 minutes, then the script kills it (`fail <name>: timed out`) and moves to the
+next. That limit only catches a hung reviewer: a 400-line diff takes about 1-2 minutes. Set
+`PEER_REVIEW_TIMEOUT=<seconds>` to change it for a very large diff. Don't build the
 reviewer commands yourself and don't wrap the script in `timeout` (macOS has none; it exits 127
 and nothing runs). Never review an axis yourself in the main context.
 
