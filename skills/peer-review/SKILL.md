@@ -29,7 +29,12 @@ Use whatever the user named (SHA, branch, tag, `HEAD~5`, ...). If they named not
 
 Confirm it resolves (`git rev-parse <fixed-point>`) and that `git diff <fixed-point>...HEAD`
 (three-dot: against the merge-base) is non-empty. A bad ref or empty diff fails here, not inside
-two reviewers. Note the commit list: `git log <fixed-point>..HEAD --oneline`.
+two reviewers. Note the commit list: `git log <fixed-point>..HEAD --oneline`, and the size:
+`git diff --shortstat <fixed-point>...HEAD`.
+
+**Small diff** (under 30 changed lines): one reviewer call covers both axes. Put the Standards
+and Spec briefs in one file under `## Standards` and `## Spec` headings, ask for the report under
+the same two headings, and run the script once. The report is still split by axis.
 
 ## 2. Detect the host
 
@@ -119,8 +124,10 @@ CLI's read-only flags, tries reviewers in order, and checks the reviewer's own e
 - A `WARNING: repo changed` line means a reviewer touched the repo: tell the user, show
   `git status`.
 
-Don't build the reviewer commands yourself and don't wrap the script in `timeout` (macOS has none;
-it exits 127 and nothing runs). Never review an axis yourself in the main context.
+Each reviewer gets 8 minutes, then the script kills it (`fail <name>: timed out`) and moves to the
+next; set `PEER_REVIEW_TIMEOUT=<seconds>` to change that for a very large diff. Don't build the
+reviewer commands yourself and don't wrap the script in `timeout` (macOS has none; it exits 127
+and nothing runs). Never review an axis yourself in the main context.
 
 ## 6. Run both axes in parallel
 
@@ -128,9 +135,13 @@ Write each brief to its own temp file, start the script once per axis at the sam
 background), and wait for both. A review can take several minutes. Each brief is
 self-contained: the reviewer sees nothing but the brief and the repo.
 
+**Paste the diff into each brief** (`git diff <fixed-point>...HEAD`) when it is 1500 lines or
+fewer, so the reviewer starts reading instead of fetching. Larger: give the diff command and
+`git diff --stat` instead, and let the reviewer open files itself.
+
 **Standards brief:**
 
-- The diff command and commit list.
+- The diff (or the diff command, see above) and commit list.
 - The standards files from step 4, **plus the smell baseline pasted in full**.
 - "Do not edit any file. Report, per file/hunk where relevant, (a) every place the diff violates a
   documented standard: cite the standard (file + the rule); and (b) any baseline smell you spot:
@@ -140,7 +151,7 @@ self-contained: the reviewer sees nothing but the brief and the repo.
 
 **Spec brief:**
 
-- The diff command and commit list.
+- The diff (or the diff command, see above) and commit list.
 - The spec contents (fetched text, not just an ID: the reviewer may not have `gh`/`az` access).
 - "Do not edit any file. Report: (a) requirements the spec asked for that are missing or partial;
   (b) behaviour in the diff that wasn't asked for (scope creep); (c) requirements that look
@@ -163,7 +174,8 @@ Before passing a finding on, spot-check that the file and line it cites exist in
 that don't as `(unverified)` rather than silently dropping them.
 
 **Prove behaviour claims by running them.** A reviewer reads code; it can be wrong about what the
-code does. For every Spec (c) finding with a repro:
+code does. For every Spec (c) finding with a repro, **at most three**, most
+severe first (the rest stay suspicions); run them at the same time, one worktree each:
 
 1. Check out `HEAD` in a scratch worktree (`git worktree add --detach <tmp> HEAD`), copying in any
    uncommitted changes from the diff, so the user's tree stays untouched.

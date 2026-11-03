@@ -10,6 +10,7 @@
 | 需求從哪來 | `/setup-matt-pocock-skills` 設定好的 issue tracker | 看 `origin` 判斷：GitHub 用 `gh` 抓 issue，Azure DevOps 用 `az` 抓 work item |
 | 沒給基準點 | 問你 | 直接用 `main` |
 | 報告 | 兩條線並排 | 一樣並排，另外標出每條線是誰審的，並抽查引用的行數是否存在 |
+| 速度 | reviewer 自己去拉 diff | 1500 行以內的 diff 直接附在 brief 裡；每個 reviewer 最多 8 分鐘，逾時就換下一個；不到 30 行時兩條線合成一次呼叫；重現步驟最多跑 3 條，同時跑 |
 | 「實作有錯」的指控 | 照 reviewer 說的列出 | 必須附重現指令，在暫用 worktree 實際跑過，分成已證實、已推翻、僅是懷疑三類 |
 
 Fowler 程式碼異味清單，以及「兩條線不合併排名」的規則，都跟原作一樣。
