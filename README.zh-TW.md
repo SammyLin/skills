@@ -14,6 +14,7 @@
 | [`humanizer-zh`](skills/humanizer-zh/) | 把中文文字的 AI 味拿掉，寫給台灣讀者：49 種模式、全形標點、中國用語對照，加上機械檢查腳本。 | 以 [nagameTW/formosa-humanizer](https://github.com/nagameTW/formosa-humanizer) 為基礎，MIT |
 | [`grill-me`](skills/grill-me/) | 開工前拷問計畫：重大與中等的決策都用選擇題問你，並追問每個答案帶來的影響，只有小事自己決定，值得記錄的才寫 ADR。 | 改寫自 Matt Pocock 的 [`grill-with-docs`](https://github.com/mattpocock/skills)，MIT |
 | [`peer-review`](skills/peer-review/) | 把分支的改動分成規範和需求兩條線各自審查，換另一個 model 來審（先找 Antigravity，再找 Codex 或 Claude），需求從 GitHub issue 或 Azure DevOps work item 抓。 | 改寫自 Matt Pocock 的 [`code-review`](https://github.com/mattpocock/skills)，MIT |
+| [`correct`](skills/correct/) | 找出 agent 在 repo 裡一犯再犯的錯，從最高層級下手讓它沒辦法再犯：架構、型別、錯誤訊息寫出修法的 lint、測試、agent hook，最後才是文件。每道新檢查都要證明擋得住一次真實的舊錯。 | 改寫自 Lauren Tan 的 [`correct`](https://github.com/cursor/plugins/tree/main/pstack/skills/correct)（pstack），MIT |
 
 ### 成品範例
 

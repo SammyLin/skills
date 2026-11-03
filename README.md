@@ -15,6 +15,7 @@ Documented in English and Traditional Chinese; they answer in the language you w
 | [`humanizer-zh`](skills/humanizer-zh/) | Takes the AI flavour out of Chinese text for Taiwanese readers: 49 patterns, full-width punctuation, mainland-term glossary, plus a mechanical checker. | Built on [nagameTW/formosa-humanizer](https://github.com/nagameTW/formosa-humanizer), MIT |
 | [`grill-me`](skills/grill-me/) | Stress-tests a plan before you build: asks about major and medium decisions as pick-an-option questions, follows up on what each answer changes, decides only the small stuff, writes an ADR when one is earned. | Adapted from Matt Pocock's [`grill-with-docs`](https://github.com/mattpocock/skills), MIT |
 | [`peer-review`](skills/peer-review/) | Reviews a branch on two separate axes, Standards and Spec, with another model as the reviewer (Antigravity first, then Codex or Claude). Pulls the spec from GitHub issues or Azure DevOps work items. | Adapted from Matt Pocock's [`code-review`](https://github.com/mattpocock/skills), MIT |
+| [`correct`](skills/correct/) | Finds the mistakes agents keep repeating in a repo and makes each impossible: architecture, types, a lint whose error names the fix, a test, an agent hook, docs last. Every new check is proven against a real past mistake. | Adapted from Lauren Tan's [`correct`](https://github.com/cursor/plugins/tree/main/pstack/skills/correct) (pstack), MIT |
 
 ### What they make
 
