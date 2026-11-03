@@ -145,6 +145,9 @@ self-contained: the reviewer sees nothing but the brief and the repo.
 - "Do not edit any file. Report: (a) requirements the spec asked for that are missing or partial;
   (b) behaviour in the diff that wasn't asked for (scope creep); (c) requirements that look
   implemented but where the implementation looks wrong. Quote the spec line for each finding.
+  For every (c) finding, also give a repro: the exact command to run from the repo root (a test,
+  a script, a curl), the output it should print if the spec is met, and the output you expect the
+  code to print instead. A (c) finding without a repro is reported as a suspicion, not a bug.
   Under 400 words."
 
 No spec: skip the Spec axis.
@@ -159,7 +162,23 @@ Do **not** merge or rerank findings across axes.
 Before passing a finding on, spot-check that the file and line it cites exist in the diff; mark any
 that don't as `(unverified)` rather than silently dropping them.
 
-End with one line: findings per axis, and the worst issue _within each axis_. Don't pick a single
+**Prove behaviour claims by running them.** A reviewer reads code; it can be wrong about what the
+code does. For every Spec (c) finding with a repro:
+
+1. Check out `HEAD` in a scratch worktree (`git worktree add --detach <tmp> HEAD`), copying in any
+   uncommitted changes from the diff, so the user's tree stays untouched.
+2. Run the repro command there, once. Read it first; skip anything that writes outside the
+   worktree, touches a remote, or deploys, and mark that finding `(not run: <reason>)`.
+3. Output shows the failure the reviewer predicted → keep it as **proven**, with the command and
+   the relevant lines of output. Output matches the spec → move it to a **Disproved** list with
+   the output. The command itself errors (missing file, wrong flag) → mark it `(repro broken)`.
+4. Remove the worktree (`git worktree remove --force <tmp>`).
+
+Findings without a repro stay as **suspicions**, listed after the proven ones. Standards findings
+are citations (rule + quoted hunk), so the line check above is their proof; they are not run.
+
+End with one line: findings per axis (Spec split into proven / suspicions / disproved), and the
+worst issue _within each axis_. Don't pick a single
 winner across axes.
 
 ## Why two axes

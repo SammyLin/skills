@@ -4,7 +4,8 @@ English · [繁體中文](README.zh-TW.md)
 
 Reviews the changes since a fixed point (default `main`) on two separate axes, Standards and Spec,
 with a different model as the reviewer. Based on Matt Pocock's
-[`code-review`](https://github.com/mattpocock/skills).
+[`code-review`](https://github.com/mattpocock/skills); the run-the-repro rule comes from
+pstack's [`interrogate`](https://github.com/cursor/plugins/tree/main/pstack/skills/interrogate).
 
 | | code-review | peer-review |
 | --- | --- | --- |
@@ -12,6 +13,7 @@ with a different model as the reviewer. Based on Matt Pocock's
 | Spec source | The issue tracker set up by `/setup-matt-pocock-skills` | Detected from `origin`: `gh` for GitHub issues, `az` for Azure DevOps work items |
 | No fixed point given | Asks | Uses `main` |
 | Report | Two axes side by side | Same, plus who reviewed each axis, and cited lines spot-checked |
+| Bug claims | Taken as the reviewer wrote them | Spec bugs need a repro; it is run in a scratch worktree and the finding is kept as proven, disproved, or a suspicion |
 
 The Fowler smell baseline and the "never rerank across axes" rule are unchanged.
 
