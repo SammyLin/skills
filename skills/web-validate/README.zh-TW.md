@@ -8,7 +8,7 @@
 
 第一次用的時候做一次設定：需要的話幫你裝 agent-browser，問你會檢查哪些網站（網址、要不要登入），每個登入打開一次看得到的瀏覽器讓你自己登入。這些存在你電腦上的 `~/.config/web-validate/sites.json`，不進任何 repo。之後每次直接開始工作，只有真的出狀況（新網站、登入過期）才會再找你。
 
-它預設只讀不寫地驗證，每張截圖都先看過才當證據，貼到 GitHub 或 Azure DevOps 的項目上，最後刪掉它複製的 profile。
+它預設只讀不寫地驗證，每張截圖都先看過才當證據，貼到 GitHub 或 Azure DevOps 的項目上。複製的 profile 留在 scratch 目錄，重開機就清掉。
 
 在 Claude Code 裡用 `/web-validate`，或直接說「上 dev 看一下」。
 

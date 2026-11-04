@@ -16,7 +16,7 @@ After that it goes straight to work, and only comes back to you when something a
 (a new site, an expired login).
 
 It validates read-only by default, looks at every screenshot before calling it evidence,
-attaches them to the GitHub or Azure DevOps item, and deletes its copy of your profile.
+attaches them to the GitHub or Azure DevOps item. Its copy of your profile stays in the scratch dir until reboot.
 
 Use it in Claude Code: `/web-validate`, or say "check it on dev".
 

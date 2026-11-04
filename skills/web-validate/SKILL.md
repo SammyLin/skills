@@ -47,5 +47,5 @@ Attach the screenshots where the work is tracked: [evidence.md](evidence.md).
 
 ## Clean up
 
-`agent-browser --session wv-<task> close`, then delete the copy (it carries the user's SSO
-cookies). If the delete is refused, give the user the exact path.
+`agent-browser --session wv-<task> close`. Leave the copy: it sits in the user-only scratch dir,
+which is wiped on reboot. Tell the user its path, since it holds their SSO cookies.
