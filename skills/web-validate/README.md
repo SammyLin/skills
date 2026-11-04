@@ -9,15 +9,13 @@ cannot or should not do itself (SSO with passkeys or MFA, a password).
 It never logs in. You sign in once, by hand, in a browser profile; the agent works on a copy of
 that profile, so the identity provider's session lets "Sign in" through without a passkey prompt.
 
-Every run starts with a setup gate, so a fresh machine walks you through it:
+The first run is a one-time setup: it installs agent-browser if needed, asks which sites you
+check (URL, whether they need a login), and opens a visible browser once per login for you to
+sign in. It saves that to `~/.config/web-validate/sites.json` on your machine, never in a repo.
+After that it goes straight to work, and only comes back to you when something actually breaks
+(a new site, an expired login).
 
-1. agent-browser installed (offers to install it and its browser)
-2. the site listed in `~/.config/web-validate/sites.json` (asks you for the URL and login page;
-   the list stays on your machine, never in a repo)
-3. for a site that needs a login, the profile signed in (opens a visible browser for you to log
-   in, then checks it worked); a site with no login skips this
-
-Then it validates read-only by default, looks at every screenshot before calling it evidence,
+It validates read-only by default, looks at every screenshot before calling it evidence,
 attaches them to the GitHub or Azure DevOps item, and deletes its copy of your profile.
 
 Use it in Claude Code: `/web-validate`, or say "check it on dev".

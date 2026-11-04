@@ -3,10 +3,11 @@ name: web-validate
 description: >-
   Validate a deployed web page in a real browser with agent-browser: public pages, and pages
   behind a login the agent cannot or should not do itself (SSO with passkeys or MFA, a password),
-  by reusing a browser profile the user signed into by hand. Runs a setup flow first when anything
-  is missing (agent-browser, the site list, a signed-in profile). Use whenever a change has to be checked, screenshotted or accepted
-  on a web page ("web validate", "check it on dev", "screenshot dev", "dev 驗證", "上 dev 看",
-  "拍 dev 截圖", acceptance after a deploy), and before ever saying a login is impossible.
+  by reusing a browser profile the user signed into by hand. A one-time setup on first use; after
+  that it goes straight to work. Use whenever a change has to be checked, screenshotted or
+  accepted on a web page ("web validate", "check it on dev", "screenshot dev", "dev 驗證",
+  "上 dev 看", "拍 dev 截圖", acceptance after a deploy), and before ever saying a login is
+  impossible.
 ---
 
 # web-validate
@@ -25,30 +26,10 @@ That belongs in the project's own docs; follow them, and use this skill for the 
 
 Talk to the user in their language.
 
-## 0. Setup gate: run it every time
+## The site list
 
-Check the three things below in order. Each one that fails sends you into its setup step, and you
-continue only once it passes. Never skip ahead because "it worked last time".
-
-### 0a. agent-browser is installed
-
-```bash
-agent-browser --version
-```
-
-Missing → install it, then its browser:
-
-```bash
-brew install agent-browser        # macOS; elsewhere: npm install -g agent-browser
-agent-browser install             # downloads the Chromium it drives
-```
-
-Ask before installing if the user has not asked you to set things up.
-
-### 0b. The site is in the site list
-
-The list lives on the user's machine, never in a repo (it names internal hosts):
-`~/.config/web-validate/sites.json`
+Everything the skill knows about the user's sites lives on their machine, never in a repo (it
+names internal hosts): `~/.config/web-validate/sites.json`
 
 ```json
 {
@@ -69,44 +50,31 @@ The list lives on the user's machine, never in a repo (it names internal hosts):
 }
 ```
 
-- `profiles`: name → profile folder. One per identity provider.
-- `sites.<name>.profile`: which profile signs in. **Omit it for a site with no login**; such a
-  site skips 0c and step 1's copy, and runs in a plain session.
-- `sites.<name>.loginPath` / `signIn`: where the login page is and the button that starts the
-  login. Leave `signIn` empty for a site that redirects to the login by itself.
+- `profiles`: name → profile folder. One per login (identity provider + account).
+- `sites.<name>.profile`: which profile signs in. **Omit it for a site with no login.**
+- `sites.<name>.loginPath` / `signIn`: the login page and the button that starts the login.
+  Leave `signIn` empty for a site that redirects to the login by itself.
 
-File missing, or the site you need is not in it → ask the user:
+**The file existing means setup is done.** Read it and go to step 1. Do not re-check the install,
+the list or the login up front: each is fixed only when it actually breaks (see **When something
+breaks**).
 
-1. The site's URL.
-2. Does it need a login? No → write the entry without `profile` and continue.
-3. Yes → its login page and the sign-in button's label, and whether it shares a login with a site
-   already listed (same SSO, same account): then it shares that profile; otherwise add a new one
-   under `profiles`, a folder under `~/.agent-browser/`.
+## 0. First-time setup (only when the file does not exist)
 
-Write the entry, show it, and continue.
+Tell the user this is a one-time setup, then:
 
-### 0c. The profile is signed in
+1. **agent-browser.** `agent-browser --version`. Missing → ask, then
+   `brew install agent-browser` (macOS; elsewhere `npm install -g agent-browser`) and
+   `agent-browser install` (the Chromium it drives).
+2. **Sites.** Ask which sites they validate, and for each one: its URL; does it need a login
+   (no → no `profile`); if yes, its login page, the sign-in button's label, and whether it shares
+   a login with a site already given (then it shares that profile; otherwise a new one, a folder
+   under `~/.agent-browser/`).
+3. **Logins.** For each profile, **Sign a profile in** below. One sign-in per profile, not per site.
+4. **Write `sites.json` last**, show it, and continue with the task. Written last on purpose: a
+   setup interrupted halfway leaves no file, so the next run starts it again.
 
-The site has no `profile` → skip this step.
-
-Profile folder missing → it has never been set up: go to **Sign the profile in** below.
-
-Profile exists → probe it on a copy (see step 1 for the copy) and open the site's URL:
-
-```bash
-agent-browser --session wv-probe --profile "$COPY" open "<url><loginPath>"
-# click the sign-in button if the site has one, wait a few seconds
-agent-browser --session wv-probe get url
-```
-
-- Lands on the app (not the login page, not the identity provider's domain) → signed in. Note who
-  (the user menu usually shows the name) and go on.
-- Lands on the identity provider, a passkey/MFA prompt, or back on the login page → the session
-  expired: go to **Sign the profile in**. Do not try to type credentials.
-
-Close the probe session when done.
-
-### Sign the profile in (the user does this part)
+## Sign a profile in (the user does this part)
 
 Open a **visible** browser on the original profile folder and hand over:
 
@@ -122,18 +90,16 @@ user to give you the password instead. Then:
 agent-browser --session wv-login close
 ```
 
-Re-run 0c. It must pass before you continue.
-
 This is the only time anything touches the original profile. It is the user's own login: it must
 be **their** account, never a copy of somebody else's folder, because everything the agent then
 does on the site is recorded under that person's name.
 
-## 1. Work on a copy
+## 1. Open the site
 
-A site with no `profile`: just `agent-browser --session wv-<task> open <url>` and go to step 2.
+A site with no `profile`: `agent-browser --session wv-<task> open <url>` and go to step 2.
 
-Never open the original profile for validation: parallel agents lock it, and a crashed run can
-corrupt it.
+A site with a profile: work on a copy. Never open the original for validation: parallel agents
+lock it, and a crashed run can corrupt it.
 
 ```bash
 COPY=<scratch dir>/wv-<task>/profile
@@ -146,6 +112,18 @@ agent-browser --session wv-<task> get url          # must have left the login pa
 - Always pass `--session`: the default session is shared with every other agent on the machine.
 - `--profile ignored: daemon already running` on the first `open` means an old daemon owns that
   session name: `close` it and open again. The same warning on later commands is normal.
+- Signed in → note who (the user menu usually shows the name) and go on.
+
+## When something breaks
+
+Fix only the part that broke, then carry on with the task:
+
+| Symptom | Fix |
+| --- | --- |
+| `agent-browser: command not found` | Setup step 1 (install). |
+| The site is not in `sites.json` | Setup step 2 for that one site, sign its profile in if it is a new one, add the entry. |
+| After "Sign in" you are on the identity provider, a passkey/MFA prompt, or back on the login page | The session expired: close, delete the copy, **Sign a profile in** again, then redo step 1. Never type credentials. |
+| The login page or button moved | Ask the user, update that site's entry. |
 
 ## 2. Validate
 
