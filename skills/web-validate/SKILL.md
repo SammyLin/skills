@@ -1,10 +1,10 @@
 ---
 name: web-validate
 description: >-
-  Validate a deployed web page in a real browser with agent-browser, including sites behind SSO
-  that a headless agent cannot log into (passkeys, MFA): it reuses a browser profile the user
-  signed into by hand. Runs a setup flow first when anything is missing (agent-browser, the site
-  list, a signed-in profile). Use whenever a change has to be checked, screenshotted or accepted
+  Validate a deployed web page in a real browser with agent-browser: public pages, and pages
+  behind a login the agent cannot or should not do itself (SSO with passkeys or MFA, a password),
+  by reusing a browser profile the user signed into by hand. Runs a setup flow first when anything
+  is missing (agent-browser, the site list, a signed-in profile). Use whenever a change has to be checked, screenshotted or accepted
   on a web page ("web validate", "check it on dev", "screenshot dev", "dev 驗證", "上 dev 看",
   "拍 dev 截圖", acceptance after a deploy), and before ever saying a login is impossible.
 ---
@@ -13,11 +13,15 @@ description: >-
 
 Look at a real, deployed page the way a user would, and come back with evidence.
 
-The hard part is signing in. Company SSO usually ends in a passkey or MFA prompt that a headless
-agent cannot answer. So the agent never logs in: **the user signs in once, by hand, in a browser
-profile; the agent works on a copy of that profile**, and the identity provider's existing session
-lets "Sign in" go straight through. One identity provider, one profile: every site behind it
-shares the session.
+A public page needs nothing more than a browser. The hard part is a page behind a login. Company
+SSO usually ends in a passkey or MFA prompt a headless agent cannot answer, and a password is not
+something the agent should hold. So the agent never logs in: **the user signs in once, by hand, in
+a browser profile; the agent works on a copy of that profile**, and the existing session lets
+"Sign in" go straight through. The same holds for SSO and for a plain username and password. One
+login, one profile: every site behind the same identity provider shares it.
+
+Out of scope: how a project signs in on localhost (minted sessions, test users, dev bypasses).
+That belongs in the project's own docs; follow them, and use this skill for the browser work.
 
 Talk to the user in their language.
 
@@ -57,20 +61,33 @@ The list lives on the user's machine, never in a repo (it names internal hosts):
       "loginPath": "/login",
       "signIn": "Sign in",
       "profile": "work-sso"
+    },
+    "marketing-site": {
+      "url": "https://www.example.com"
     }
   }
 }
 ```
 
 - `profiles`: name → profile folder. One per identity provider.
-- `sites.<name>.loginPath` / `signIn`: where the login page is and the button that starts SSO.
-  Leave `signIn` empty for a site that redirects to the identity provider by itself.
+- `sites.<name>.profile`: which profile signs in. **Omit it for a site with no login**; such a
+  site skips 0c and step 1's copy, and runs in a plain session.
+- `sites.<name>.loginPath` / `signIn`: where the login page is and the button that starts the
+  login. Leave `signIn` empty for a site that redirects to the login by itself.
 
-File missing, or the site you need is not in it → ask the user for the site's URL, its login page,
-the sign-in button's label, and which identity provider it uses (does it share a login with a site
-already listed? then it shares that profile). Write the entry, show it, and continue.
+File missing, or the site you need is not in it → ask the user:
+
+1. The site's URL.
+2. Does it need a login? No → write the entry without `profile` and continue.
+3. Yes → its login page and the sign-in button's label, and whether it shares a login with a site
+   already listed (same SSO, same account): then it shares that profile; otherwise add a new one
+   under `profiles`, a folder under `~/.agent-browser/`.
+
+Write the entry, show it, and continue.
 
 ### 0c. The profile is signed in
+
+The site has no `profile` → skip this step.
 
 Profile folder missing → it has never been set up: go to **Sign the profile in** below.
 
@@ -97,8 +114,9 @@ Open a **visible** browser on the original profile folder and hand over:
 agent-browser --session wv-login --profile <profile folder> --headed open "<url><loginPath>"
 ```
 
-Tell the user: "A browser window is open. Click <signIn>, finish your login and passkey, and tell
-me when you see the app." Wait for their answer. Then:
+Tell the user: "A browser window is open. Click <signIn>, finish your login (password, passkey,
+MFA, whatever it asks), and tell me when you see the app." Wait for their answer. Never ask the
+user to give you the password instead. Then:
 
 ```bash
 agent-browser --session wv-login close
@@ -111,6 +129,8 @@ be **their** account, never a copy of somebody else's folder, because everything
 does on the site is recorded under that person's name.
 
 ## 1. Work on a copy
+
+A site with no `profile`: just `agent-browser --session wv-<task> open <url>` and go to step 2.
 
 Never open the original profile for validation: parallel agents lock it, and a crashed run can
 corrupt it.
