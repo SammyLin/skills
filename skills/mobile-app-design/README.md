@@ -15,9 +15,9 @@ real IDs, keep data on screen during refresh, and never cover a shift with an an
 
 It verifies on a simulator: a debug flag holds every request in loading, then `shift_check.py`
 compares the loading and loaded screenshots and lists every card, photo block or control that
-moved. Reference images of a pass and a fail are in [examples/](examples/sheet.png).
+moved. Reference images of a pass and a fail are in [examples/](examples/reference.png).
 
-![pass and fail](examples/sheet.png)
+![pass and fail](examples/reference.png)
 
 Use it in Claude Code: `/mobile-app-design`, or say "the list jumps when it loads".
 

@@ -193,7 +193,7 @@ def examples(out):
         im.thumbnail((300, 650))
         sheet.paste(im, (10 + i * 310, 30))
         ImageDraw.Draw(sheet).text((10 + i * 310, 8), name, fill="black", font=font(8))
-    sheet.save(os.path.join(out, "sheet.png"))
+    sheet.save(os.path.join(out, "reference.png"))
     assert not results["good"], f"matching skeleton should pass: {results['good']}"
     assert results["bad"], "mismatched skeleton should fail"
     print(f"examples in {out}: good pair 0 issues, bad pair {len(results['bad'])} issues")

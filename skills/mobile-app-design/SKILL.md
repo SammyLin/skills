@@ -59,7 +59,7 @@ unstable IDs, a view that only exists after data arrives); never hide a shift wi
   `python3 <this skill>/shift_check.py loading.png loaded.png -o overlay.png` (Pillow). It pairs
   the long straight edges (cards, photo blocks, search bar, controls) and lists every one that
   moved or exists in only one shot; exit 1 = shift. Text vs skeleton bars is ignored by design.
-- What pass and fail look like: [examples/sheet.png](examples/sheet.png) (a matching skeleton,
+- What pass and fail look like: [examples/reference.png](examples/reference.png) (a matching skeleton,
   and one with the three usual mistakes: controls missing while loading, cards too short, photo
   too small). Regenerate and self-check with `shift_check.py --examples examples`.
 - Look at every screenshot and overlay yourself before saying done; the script is a heuristic.
