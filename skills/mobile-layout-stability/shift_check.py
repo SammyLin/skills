@@ -123,8 +123,8 @@ def overlay(loaded, ea, eb, issues, path):
 # ---------------------------------------------------------------- reference images
 
 S = 2  # draw at @2x of a 390 x 844 pt phone
-BG, SURFACE, INK, MUTED, SKEL, CORAL, CHIP, YELLOW = (
-    "#FBF6EE", "#FFFFFF", "#2A211C", "#7A6C60", "#EDE3D6", "#E5674F", "#F4ECE1", "#FCEBB6")
+BG, SURFACE, INK, MUTED, SKEL, CORAL, CHIP, YELLOW = (  # "cool clinical" from visual-identity.md
+    "#F4F6F8", "#FFFFFF", "#0E1726", "#5B6676", "#E3E8EE", "#2F5BFF", "#E9EDF2", "#FFF1C2")
 
 
 def font(size):
@@ -164,14 +164,14 @@ def phone(state, bad=False):
             for bx, bw, bh, by in ((136, 200, 14, 14), (136, 120, 14, 38), (136, 96, 22, 60), (136, 70, 24, 88 if not bad else 70)):
                 rr(d, (bx, top + by, bx + bw, top + by + bh), min(bh / 2, 6) if bh < 24 else 12, SKEL)
         else:
-            rr(d, (32, top + 12, 124, top + 104), 12, "#E9D9C6")
+            rr(d, (32, top + 12, 124, top + 104), 12, "#D5DEE8")
             d.text((136 * S, (top + 12) * S), ["Kirkland Mixed Nuts", "Corn Soup 6-pack", "Paper Towels 12 rolls", "Greek Yogurt 2kg", "Olive Oil 3L"][i], font=font(15), fill=INK)
             d.text((136 * S, (top + 34) * S), "1.13 kg", font=font(13), fill=MUTED)
             d.text((136 * S, (top + 56) * S), "$399", font=font(22), fill=INK)
             rr(d, (136, top + 86, 206, top + 110), 12, CORAL)
             d.text((144 * S, (top + 90) * S), "Save $80", font=font(12), fill="white")
             rr(d, (212, top + 86, 272, top + 110), 12, YELLOW)
-            d.text((220 * S, (top + 90) * S), "4 days", font=font(12), fill="#8A5A00")
+            d.text((220 * S, (top + 90) * S), "4 days", font=font(12), fill="#7A5300")
     rr(d, (0, 760, 390, 844), 0, SURFACE)  # tab bar, always there
     return img
 

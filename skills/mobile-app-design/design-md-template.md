@@ -5,7 +5,14 @@ fix one of them the same day. Record who decided what and when, so a later agent
 
 ```markdown
 # Design System: <App name>
-Decided: <date>, <who>. Style source: <skill or reference>.
+Decided: <date>, <who>.
+
+## 0. Brief
+- Who, the one job, how often, where (one hand in an aisle, at a desk), what makes it different
+
+## Identity
+- Direction chosen: <name, 3-5 words from the brief>; rejected: <the other directions, one line why>
+- Any colour palette_check.py flags that the owner chose on purpose
 
 ## 1. Principles
 - <how dense a screen is, e.g. 4–5 items visible on one phone screen>
@@ -31,7 +38,7 @@ Decided: <date>, <who>. Style source: <skill or reference>.
 - Skeleton: <shared component name>; spinner only for actions the user started
 
 ## 5. Screens
-For each: purpose, header controls (fixed), content blocks in order, each block's
+Screen map (tabs, pushes, sheets) and the 2-3 primary flows. For each screen: purpose, header controls (fixed), content blocks in order, each block's
 loading / empty / error copy.
 
 ## 6. Motion
@@ -43,4 +50,5 @@ loading / empty / error copy.
 
 ## 8. Banned
 - <emoji in UI, hairline borders, colours outside the tokens, icon-only primary actions, ...>
+- The overused looks in visual-identity.md, unless chosen above
 ```

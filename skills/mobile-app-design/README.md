@@ -2,23 +2,19 @@
 
 English · [繁體中文](README.zh-TW.md)
 
-Designs, builds and audits native iOS (SwiftUI) and Android (Jetpack Compose) screens from one
-`DESIGN.md`. Every screen is drawn in all of its states (loading, empty, error, loaded, large
-text, dark), each platform keeps its own navigation and controls, and a layout-stability audit
-walks every screen so nothing jumps between the skeleton and the content, on refresh, or while
-you scroll.
+Designs a native iOS (SwiftUI) and Android (Jetpack Compose) app as a whole, in order: a short
+brief, the screen map and primary flows, a visual identity of the app's own, tokens and
+components written into `DESIGN.md`, then every screen with its hierarchy and all of its states
+(loaded, loading, empty, error, first run, large text, dark), interaction, motion and copy.
+Each platform keeps its own navigation and controls (Apple HIG, Material 3).
 
-Rules come from Apple's Human Interface Guidelines, Material 3 and the Android Compose docs, plus
-what shipping a real app (a deals app with skeleton rows, a quick-return header and async
-prices) taught: reserve image and price sizes, keep controls rendered while loading, key lists by
-real IDs, keep data on screen during refresh, and never cover a shift with an animation.
+For the look it proposes two or three directions, each as tokens plus a rendered home screen,
+and you pick. It steers clear of overused default looks (warm cream pages with clay-orange
+accents, serif-over-sans editorial calm, purple gradients); `palette_check.py` flags those
+colours in your theme files.
 
-It verifies on a simulator: a debug flag holds every request in loading, then `shift_check.py`
-compares the loading and loaded screenshots and lists every card, photo block or control that
-moved. Reference images of a pass and a fail are in [examples/](examples/reference.png).
+Pair it with [`mobile-layout-stability`](../mobile-layout-stability/) once screens are built.
 
-![pass and fail](examples/reference.png)
-
-Use it in Claude Code: `/mobile-app-design`, or say "the list jumps when it loads".
+Use it in Claude Code: `/mobile-app-design`, or say "design this app" / "give it its own look".
 
 MIT.

@@ -1,68 +1,98 @@
 ---
 name: mobile-app-design
 description: >-
-  Design, build and audit native iOS (SwiftUI) and Android (Jetpack Compose) app screens: a
-  DESIGN.md the whole app follows, every screen drawn in all of its states (loading, empty,
-  error, loaded, offline), platform rules from Apple's HIG and Material 3, and a layout-stability
-  audit so nothing jumps between skeleton and content. Use when designing or reviewing an app's
-  UI, starting an Android version of an iOS app (or the reverse), or when the user mentions
-  layout shift, skeleton screens, 畫面跳動, 版面穩定, 載入閃一下, scroll jumping, "the list jumps",
-  or asks for iOS / Android design best practices.
+  Design a native iOS (SwiftUI) and Android (Jetpack Compose) app as a whole: product brief,
+  information architecture and navigation, a visual identity of its own, a token and component
+  system in DESIGN.md, every screen with its hierarchy and all of its states, interaction and
+  motion, copy, accessibility and platform adaptation (Apple HIG, Material 3). Use when
+  designing, redesigning or reviewing an app's UI, giving an app its own look, starting the
+  Android version of an iOS app (or the reverse), or when the user mentions app design,
+  設計 App, 畫面設計, 改版, 換風格, design system, or asks for iOS / Android design best practices.
 ---
 
 # mobile-app-design
 
-One design, two platforms, every state. Talk to the user in their language.
+Design the whole app before any one screen: what it is for, how people move through it, what
+it looks like, then each screen. One design, two platforms, every state. Talk to the user in
+their language. The owner decides product and visual direction; you propose and build.
 
 ## 0. Read what exists
 
-- The app's `DESIGN.md` (colours, type, components, banned list). Missing → write one from
-  [design-md-template.md](design-md-template.md) before touching a screen, and get the owner's
-  yes on it. Owner decisions recorded there are not yours to undo.
-- The shared design components (theme, skeleton, buttons). Reuse them; a second skeleton or
-  a second button style is the most common way an app drifts.
-- The screen list: every tab, pushed page, sheet and alert. Write it down; the audit walks it.
+- `DESIGN.md`, the theme/token file, shared components, the screen list (every tab, pushed page,
+  sheet, alert). Owner decisions recorded in DESIGN.md are not yours to undo.
+- Missing DESIGN.md → write it from [design-md-template.md](design-md-template.md) as you go
+  through steps 1–5, and get the owner's yes before building screens on it.
+- Reuse shared components; a second button or card style is how an app drifts.
 
-## 1. Design each screen as a set of states
+## 1. Brief (half a page)
 
-A screen is not done until each state below is drawn, and each one keeps the same frame:
+Who uses it, the one job they open it for, how often, in what situation (one hand in a store
+aisle, at a desk), and what makes this app different. Every later choice should trace back here.
+
+## 2. Structure
+
+- **Screen map**: every screen and how you get there. Top-level destinations become tabs (3–5);
+  everything else is a push or a sheet. Draw it as a list or a mermaid flowchart.
+- **Primary flows**: the 2–3 paths that matter most (first launch → first value, the daily
+  check, the money/permission moment), step by step, with the fewest taps.
+- **Hierarchy per screen**: what the eye hits first, second, third. One primary action.
+- **Density**: how many items a screen shows; decide it once for the app.
+
+## 3. Visual identity
+
+Give the app a look that belongs to it, from the brief, not a default.
+[visual-identity.md](visual-identity.md): propose 2–3 directions, each as tokens plus one
+rendered home screen; the owner picks. It also lists the overused looks to stay out of; run
+`python3 <this skill>/palette_check.py <theme files>` on the result.
+
+## 4. Tokens and components
+
+Write the chosen direction into DESIGN.md as tokens (colour, type scale, spacing, radius,
+elevation, motion) and components with exact sizes (buttons, cards, rows, chips, inputs,
+segmented control, tab bar, sheets, empty/error blocks, skeleton). Sizes are the contract the
+skeletons and both platforms build from.
+
+## 5. Screens
+
+For each screen: purpose, fixed controls, content blocks in order, the primary action, and every
+state below. A screen is not done until each is drawn in the same frame:
 
 | State | Rule |
 |---|---|
-| Loading | Skeleton with the loaded layout's exact geometry. A spinner only for an action the user just started. |
-| Loaded | Content replaces the skeleton in place. |
-| Empty | Same header and controls as loaded; one line saying why it is empty and what to do. |
-| Error / offline | Keep cached content if there is any; say what failed in one line, with a retry. |
-| Partial | Each async block (price, photo, chart) has its own placeholder; one slow block never holds the page. |
-| Large text | Largest Dynamic Type / 200% font scale: nothing clipped, layout may stack but not overlap. |
-| Dark, Reduce Motion | Checked, not assumed. |
+| Loaded | The hierarchy from step 2. |
+| Loading | Skeleton with the loaded geometry; spinner only for an action the user just started. |
+| Empty | Same header and controls; one line on why and what to do. |
+| Error / offline | Keep cached content; one line on what failed, with retry. |
+| Partial | Each async block has its own placeholder; one slow block never holds the page. |
+| First run / permission | Explain the value before the system prompt. |
+| Large text, dark, Reduce Motion | Checked, not assumed. |
 
-## 2. Platform rules
+## 6. Interaction, motion, copy
 
-Same information architecture and copy on both; native controls and navigation on each.
-[ios.md](ios.md) for SwiftUI, [android.md](android.md) for Compose. Never ship one platform's
-idiom on the other (iOS back chevron on Android, a FAB on iOS, Material ripple in SwiftUI).
+- Gestures native to each platform (swipe back, pull to refresh, long press for secondary
+  actions); never the only way to do something.
+- Motion explains a change the user caused (where a sheet came from, what got deleted). Data
+  arriving does not animate layout. Honour Reduce Motion.
+- Feedback within 100 ms for every tap; haptics light and rare.
+- Copy: verbs on buttons, the user's words not the system's, numbers formatted for the locale,
+  one name per concept across the app.
 
-## 3. Layout stability
+## 7. Platform adaptation
 
-The skeleton → loaded swap, a background refresh and a filter change must not move anything the
-user did not move. Run [layout-stability.md](layout-stability.md) over **every** screen in the
-list from step 0, not just the one in the bug report. Fix the cause (missing reserved size,
-unstable IDs, a view that only exists after data arrives); never hide a shift with an animation.
+Same structure, identity and copy on both; native navigation and controls on each.
+[ios.md](ios.md) for SwiftUI, [android.md](android.md) for Compose.
 
-## 4. Verify on a device or simulator
+## 8. Layout stability
 
-- Add a debug launch flag that holds every request in its loading state (`-holdLoading YES` on
-  iOS, a debug build config field on Android), so the skeleton can be screenshotted.
-- Screenshot each screen loading, then loaded, same device, same scroll offset, status bar
-  fixed (`xcrun simctl status_bar booted override --time 9:41`). Then run
-  `python3 <this skill>/shift_check.py loading.png loaded.png -o overlay.png` (Pillow). It pairs
-  the long straight edges (cards, photo blocks, search bar, controls) and lists every one that
-  moved or exists in only one shot; exit 1 = shift. Text vs skeleton bars is ignored by design.
-- What pass and fail look like: [examples/reference.png](examples/reference.png) (a matching skeleton,
-  and one with the three usual mistakes: controls missing while loading, cards too short, photo
-  too small). Regenerate and self-check with `shift_check.py --examples examples`.
-- Look at every screenshot and overlay yourself before saying done; the script is a heuristic.
-- Large text and dark mode: one screenshot each per changed screen.
+Loading → loaded, refresh and filter changes must not move what the user did not move. Design
+skeletons from the component sizes in step 4, then run the `mobile-layout-stability` skill over
+every screen once they are built.
 
-Report per screen: what moved, why, what fixed it, before/after screenshots.
+## 9. Verify on a simulator or device
+
+- Screenshot every changed screen: loaded, loading (a debug flag that holds requests, e.g.
+  `-holdLoading YES`), empty, error, largest text, dark. Look at each one yourself.
+- `python3 <this skill>/palette_check.py <theme files>` exits 0, or DESIGN.md records that the
+  owner chose the flagged colour.
+
+Report per screen: what changed, why, before/after screenshots.

@@ -1,7 +1,21 @@
-# Layout stability audit
+---
+name: mobile-layout-stability
+description: >-
+  Find and fix layout shift in a native iOS (SwiftUI) or Android (Compose) app: skeletons that
+  differ from the loaded screen, images and prices that push rows when they arrive, controls that
+  appear late, lists that jump on refresh or pagination, scroll position lost on updates. Walks
+  every screen, fixes the cause, proves it with loading-vs-loaded screenshots and shift_check.py.
+  Use when the user mentions layout shift, layout stability, skeleton screens, 畫面跳動, 版面穩定,
+  載入閃一下, 跳一下, scroll jumping, "the list jumps", or "things move when it loads".
+---
+
+# mobile-layout-stability
 
 Goal: from loading to loaded, and on every later update, nothing the user did not touch changes
-position or size. Walk every screen; for each, answer the checks below and fix what fails.
+position or size. Talk to the user in their language. List every screen (tabs, pushed pages,
+sheets) first; walk all of them, not just the one in the report. Fix the cause (a missing
+reserved size, unstable IDs, a view that only exists after data arrives); never hide a shift
+with an animation.
 
 ## Checks
 
@@ -50,6 +64,23 @@ make an unrequested shift look intentional.
 | Controls appear only after load | Header inside the loaded branch | Header outside the `if loading` switch | Same; header is a `stickyHeader` / outside the state `when` |
 | Whole screen flashes on refresh | State reset to `.loading` on refresh | Keep showing old data; show refresh in the pull indicator only | `PullToRefreshBox`; UI state keeps last data |
 | Section pops in above content | Optional block inserted late | Reserve, or place it below the first screen | Same |
+
+## Verify
+
+1. Add a debug launch flag that holds every request in its loading state (`-holdLoading YES` on
+   iOS, a debug build config field on Android), so the skeleton can be screenshotted.
+2. Per screen, same device, same scroll offset, fixed status bar
+   (`xcrun simctl status_bar booted override --time 9:41`): screenshot loading, then loaded.
+3. `python3 <this skill>/shift_check.py loading.png loaded.png -o overlay.png` (Pillow). It pairs
+   the long straight edges (cards, photo blocks, search bar, controls) and lists every one that
+   moved or exists in one shot only; exit 1 = shift. Text vs skeleton bars is ignored by design.
+   On the overlay red = loading only, cyan = loaded only.
+4. Pass and fail look like [examples/reference.png](examples/reference.png): a matching skeleton,
+   and one with the three usual mistakes (controls missing while loading, cards too short, photo
+   too small). Regenerate and self-check with `shift_check.py --examples examples`.
+5. Look at every screenshot and overlay yourself; the script is a heuristic. Also check largest
+   text size and a background refresh while scrolled halfway down.
+
 
 ## Per-screen report
 

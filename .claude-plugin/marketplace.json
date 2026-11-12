@@ -8,7 +8,7 @@
   "plugins": [
     {
       "name": "sammylin-skills",
-      "description": "store-screenshots, humanizer-zh, grill-me, peer-review, correct, web-validate and mobile-app-design (my own), humanizer, ip-as-logo, and the taste-skill classics for frontend art direction.",
+      "description": "store-screenshots, humanizer-zh, grill-me, peer-review, correct, web-validate, mobile-app-design and mobile-layout-stability (my own), humanizer, ip-as-logo, and the taste-skill classics for frontend art direction.",
       "version": "0.1.0",
       "source": "./",
       "skills": [
@@ -24,6 +24,7 @@
         "./skills/ip-as-logo",
         "./skills/minimalist-ui",
         "./skills/mobile-app-design",
+        "./skills/mobile-layout-stability",
         "./skills/peer-review",
         "./skills/stitch-design-taste",
         "./skills/store-screenshots",
