@@ -17,7 +17,7 @@
     { "src": "blob", "x": 0.62, "y": 0.22, "w": 0.70, "color": "#C9D9FF", "opacity": 0.9 },
     { "src": "blob", "x": -0.30, "y": 0.50, "w": 0.70, "color": "#F7CFE6", "opacity": 0.8 },
     { "src": "blob", "x": 0.70, "y": 0.72, "w": 0.55, "color": "#D7CCFF", "opacity": 0.8 },
-    { "src": "bell", "x": 0.64, "y": 0.065, "w": 0.32, "rotate": 0 }
+    { "src": "bell", "slot": "accent", "x": 0.70, "y": 0.012, "w": 0.21, "rotate": 0 }
   ],
   "frame": "device",
   "device_width": 0.74

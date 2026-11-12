@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 420"><defs>
+<filter id="s"><feDropShadow dx="0" dy="14" stdDeviation="14" flood-color="#5a4bb0" flood-opacity=".22"/></filter>
+<radialGradient id="c" cx=".35" cy=".3" r=".8"><stop offset="0" stop-color="#5BE08A"/><stop offset="1" stop-color="#1E9E50"/></radialGradient></defs>
+<g transform="rotate(10 180 210)" filter="url(#s)">
+<path d="M80 30H280V380l-25-18-25 18-25-18-25 18-25-18-25 18-25-18-25 18Z" fill="#fff"/>
+<g stroke="#D9D3F2" stroke-width="12" stroke-linecap="round"><path d="M112 90H248"/><path d="M112 140H220"/><path d="M112 190H248"/><path d="M112 240H200"/></g>
+<path d="M112 300H248" stroke="#E60023" stroke-width="14" stroke-linecap="round"/></g>
+<circle cx="300" cy="300" r="62" fill="url(#c)"/><path d="M270 300l22 22 40-46" stroke="#fff" stroke-width="16" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>

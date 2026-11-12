@@ -208,6 +208,11 @@ little off the bottom).
 | `shopping-checklist` | Cream `#FFF8E6`, navy ink, mustard underline, outline motif | Shopping, lists, deals, food |
 | `notification-reminder` | Lavender→sky gradient, navy ink, red filled motif, two quiet circles | Alerts, reminders, trackers |
 
+A style's prop marked `"slot": "accent"` (the bell in `notification-reminder`) can be swapped per
+shot with `"prop": "tag" | "receipt" | "camera" | "calendar" | "badge" | "bell" | "none"`, so each shot
+gets an illustration that matches its claim. A shot's `"bleed"` (fraction of the canvas height, default 0.035) sinks an anchored
+screen further off the bottom, to keep something at the bottom of the screen out of frame.
+
 Set `"style": "<name>"` in `set.json` (or per shot), or compare styles without touching the set:
 `render.py set.json --only 1 --style shopping-checklist,notification-reminder` (`both` is the
 same pair) writes `final/<style>/` per style, each with its own `sheet.png` and `layout.json`.

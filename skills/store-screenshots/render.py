@@ -160,7 +160,7 @@ PAGE = """<!doctype html>
   if (holder.classList.contains('shot') || holder.classList.contains('anchored')) {{
     // Framed-less screen keeps its width (style shot_width); a short headline anchors it to the
     // bottom so it bleeds by a fixed amount instead of floating.
-    const bleed = Math.round(H * 0.035);
+    const bleed = Math.round(H * {bleed_frac});  // per shot: "bleed" sinks the screen further off the bottom
     if (d.bottom < H + bleed) holder.style.top = Math.round(H + bleed - d.height) + 'px';
   }} else if (d.bottom < H + 40) {{
     // A short headline lifts the device; grow it so it still bleeds off the bottom edge.
@@ -360,6 +360,10 @@ def page_for(spec, shot, W, H, locale=None, style=None):
         deco += '<div class="underline"></div>'
     # Props: illustrations from props/*.svg placed in canvas fractions, behind the screenshot.
     for pr in (style or {}).get("props", []):
+        if pr.get("slot") == "accent" and shot.get("prop"):  # per-shot illustration in the style's accent slot
+            pr = {**pr, "src": shot["prop"]}
+        if pr.get("slot") == "accent" and shot.get("prop") == "none":
+            continue
         path = os.path.join(PROPS_DIR, pr["src"] + ".svg")
         if not os.path.exists(path):
             sys.exit(f"style prop '{pr['src']}' not found in props/")
@@ -392,6 +396,7 @@ def page_for(spec, shot, W, H, locale=None, style=None):
         motif_w=motif_w, motif_top=top + round((size * 0.98 - motif_w) / 2),
         ul_w=px(300), ul_h=px(14), ul_gap=px(28), sw_h=px(34),
         h_rot=(style or {}).get("headline_rotate", 0),
+        bleed_frac=shot.get("bleed", 0.035),
         shot_w=shot_w, shot_r=round(shot_w * 0.085), shot_sy=px(24), shot_sb=px(70),
         shot_a=(style or {}).get("shadow", 0.10),
         ground=shot.get("ground", pal["ground"]), ink=shot.get("ink", pal["ink"]),
