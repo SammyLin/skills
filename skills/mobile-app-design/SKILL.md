@@ -38,6 +38,10 @@ aisle, at a desk), and what makes this app different. Every later choice should 
   These flows are the funnels the `mobile-analytics` skill instruments.
 - **Hierarchy per screen**: what the eye hits first, second, third. One primary action.
 - **Density**: how many items a screen shows; decide it once for the app.
+- **Asks**: every moment the app asks the user for something (notification, camera, location,
+  ATT, sign-in, payment, an App Store / Play rating) sits at a point in the flows above, right
+  after the user saw why. Nothing is asked at first launch. The rating ask is designed in every
+  app, not added later: see step 6.
 
 ## 3. Visual identity
 
@@ -77,6 +81,26 @@ state below. A screen is not done until each is drawn in the same frame:
 - Feedback within 100 ms for every tap; haptics light and rare.
 - Copy: verbs on buttons, the user's words not the system's, numbers formatted for the locale,
   one name per concept across the app.
+
+### Asking for a rating
+
+Every app asks for a store rating; decide where in the brief's flows, before building.
+
+- **When**: right after the user got what they came for (the core value action succeeded: an
+  alert set, a lesson finished), from about the 3rd launch on, at most every ~120 days. Wait about
+  a second so the good news lands first. Put the launch count and the gap in config.
+- **Never**: at launch, from a push open before the content shows, on top of a permission prompt,
+  an interstitial ad or a sheet, or after an error.
+- **System prompt only**: iOS `@Environment(\.requestReview)` / `AppStore.requestReview(in:)`;
+  Android Play In-App Review (`ReviewManager.requestReviewFlow` → `launchReviewFlow`). Both decide
+  whether it shows (iOS at most 3 times a year) and never say whether the user rated, so never
+  wire it to a button.
+- **No pre-filter**: no "Do you like the app?" that sends only the happy ones to the store; both
+  stores forbid it, and so do rewards for rating.
+- **A way in anyway**: a 「評分」 row in Settings opens the store's write-review page (iOS
+  `https://apps.apple.com/app/id<ID>?action=write-review`, Android the Play listing).
+- **Measured**: `mobile-analytics` logs `rating_prompt_requested {prompt_moment}` and compares it
+  with new ratings in App Store Connect / Play Console.
 
 ## 7. Platform adaptation
 

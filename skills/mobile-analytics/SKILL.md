@@ -96,7 +96,7 @@ platform, app version, OS, device, country, language, first-user source / medium
 | Coming back | FCM pushes are logged automatically (`notification_open` with the message ID); pass a `campaign` / `label` in the FCM message so opens can be split. In-app result of a push: the core action's `entry_source: push`. |
 | Sharing, deep links | `share {method, content_type, item_id}`; custom `deep_link_opened {link_type}`. |
 | Paying | `paywall_viewed {paywall_source}` (custom). Purchases: link the Play and App Store apps in Firebase; Android purchases and subscription events are logged automatically; iOS StoreKit 2 calls `Analytics.logTransaction(transaction)` after verification. Revenue, renewals, refunds: Play Console / App Store Connect or RevenueCat, never summed from client events. |
-| Rating prompt | `rating_prompt_requested`; iOS never says whether it showed. |
+| Rating prompt | Required whenever the app asks (`requestReview` / `launchReviewFlow`): `rating_prompt_requested {prompt_moment}` at the call, with a metric comparing it to new ratings in App Store Connect / Play Console. The stores never say whether it showed, so no conversion rate. |
 
 ## 3. Identity, consent, environments
 
