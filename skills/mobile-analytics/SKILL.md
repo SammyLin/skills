@@ -68,7 +68,7 @@ list them under `auto_events`.
 | Rule | Standard |
 |---|---|
 | Name | `object_action`, snake_case, past tense: `alert_created`. Letters, digits, `_`; starts with a letter; ≤ 40 chars; no `firebase_` / `google_` / `ga_` prefix. No dots: Firebase rejects them. |
-| Outcome, not UI | Fire after success (server confirmed, saved), not on tap. `alert_created`, not `save_button_tapped`. |
+| Outcome, not UI | Fire after success (server confirmed, saved), not on tap. `alert_created`, not `save_button_tapped`. A failed request is not an outcome: never log it as zero results or an empty result. |
 | Variants are parameters | `share {method: line}`, not `share_line`. One sentence covers all variants → one event. |
 | Start + end only where people drop | Multi-step flows get begin/complete (+ `step` on a step event); single taps don't. |
 | Screens | Turn auto screen reporting off (`FirebaseAutomaticScreenReportingEnabled = NO` in Info.plist; `google_analytics_automatic_screen_reporting_enabled = false` manifest meta-data): SwiftUI reports `UIHostingController`. Log `screen_view {screen_name}` once per appearance, `screen_name` from the plan's screen map. |

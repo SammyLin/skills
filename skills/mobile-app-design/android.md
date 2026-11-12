@@ -34,6 +34,15 @@ design says so.
 - Colours in `MaterialTheme.colorScheme` slots mapped from DESIGN.md tokens, light and dark.
 - Respect "Remove animations" (animator duration scale 0): skeleton pulse stops.
 
+## Network
+- One OkHttp / Ktor client with connect, read and call timeouts from config; a sealed result type
+  (`Offline`, `Timeout`, `Server(code)`, `Success`) so UI state can't confuse failure with empty.
+- `ConnectivityManager.registerDefaultNetworkCallback` (as a Flow) for offline state; re-load the
+  visible screen on `onAvailable`.
+- Writes that must arrive go through WorkManager with a `NetworkType.CONNECTED` constraint.
+- Room (or DataStore) as the last-good cache; the screen reads the cache and the network refreshes it.
+- Fake conditions with an OkHttp interceptor in debug builds, plus emulator network throttling.
+
 ## Lists and stability
 - `LazyColumn { items(list, key = { it.id }, contentType = { it.kind }) }`: stable keys keep
   state and scroll anchor when items move; keys must be Bundle-saveable.
