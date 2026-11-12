@@ -34,6 +34,16 @@ Check developer.apple.com/design/human-interface-guidelines when a rule here see
 - Skeleton when the wait can exceed about a second; a spinner only for an action the user started.
 - Every skeleton has a timeout path to an error state; it never breathes forever.
 
+## Network
+- One `URLSession` with `timeoutIntervalForRequest` / `ForResource` set from config; `waitsForConnectivity`
+  off for reads the user is waiting on (fail fast, show the notice), on for background writes.
+- Errors are typed (`offline`, `timeout`, `server(status)`, `decoding`); views switch on them.
+  `try?` that turns a failed load into `[]` is not allowed for anything the user sees.
+- `NWPathMonitor` for connectivity; retry the visible screen when `path.status` becomes
+  `.satisfied`.
+- `URLCache` or your own response cache for last-good data, with its timestamp.
+- Fake conditions with a `URLProtocol` subclass registered in Debug behind a launch argument.
+
 ## SwiftUI tools for stability
 - `.redacted(reason: .placeholder)` on the real view with sample data: same geometry for free.
 - `.lineLimit(n, reservesSpace: true)` reserves lines.
