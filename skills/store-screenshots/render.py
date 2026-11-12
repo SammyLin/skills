@@ -71,6 +71,8 @@ PAGE = """<!doctype html>
   /* Break CJK headlines at phrase/word boundaries, not mid-word. */
   h1:lang(ja) {{ word-break: auto-phrase; }}
   h1:lang(ko) {{ word-break: keep-all; }}
+  /* Chinese: break after punctuation (，、) first; only a line that still overflows breaks mid-phrase. */
+  h1:lang(zh) {{ word-break: keep-all; overflow-wrap: anywhere; }}
   .device {{
     position: absolute; left: 50%; transform: translateX(-50%);
     width: {dev_w}px; padding: {bezel}px; border-radius: {dev_r}px;
