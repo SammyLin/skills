@@ -9,6 +9,9 @@ own pixels are never redrawn by a model. The same page measures itself
 
   python3 render.py screenshots/set.json            # all shots + sheet
   python3 render.py screenshots/set.json --only 2   # one shot (1-based)
+  python3 render.py screenshots/set.json --style shopping-checklist,notification-reminder
+                                                    # same set in named styles (styles/*.json),
+                                                    # one folder per style + a comparison sheet
 
 Stdlib only. Needs Google Chrome / Chromium.
 """
@@ -31,6 +34,19 @@ SIZES = {
     "ipad-13": (2064, 2752), "android": (1080, 1920),
 }
 LAYOUTS = ("poster", "breakout", "bleed")
+STYLES_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "styles")
+PROPS_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "props")
+MOTIFS = ("discount", "alert", "checklist", "compare")
+
+# Feature motifs, 100x100. Filled: accent shape with white details. Outline: accent strokes.
+MOTIF_SVG = {
+    "discount": ('<path d="M34 10H90V90H34L8 50Z"/>', '<circle cx="34" cy="50" r="8" class="d"/>'),
+    "alert": ('<path d="M50 8C31 8 22 24 22 42V62L12 76H88L78 62V42C78 24 69 8 50 8Z"/>',
+              '<circle cx="50" cy="88" r="8"/>'),
+    "checklist": ('<rect x="10" y="10" width="80" height="80" rx="16"/>',
+                  '<polyline points="28,52 44,68 74,34" class="d"/>'),
+    "compare": ('<rect x="10" y="40" width="32" height="50" rx="6"/><rect x="58" y="10" width="32" height="80" rx="6"/>', ''),
+}
 
 # Phrases that claim proof. Allowed only when set.json marks it real ("proof": [...]).
 PROOF = re.compile(
@@ -60,17 +76,35 @@ PAGE = """<!doctype html>
   }}
   * {{ box-sizing: border-box; margin: 0; }}
   html, body {{ width: var(--W); height: var(--H); overflow: hidden; background: var(--ground); }}
-  .canvas {{ position: relative; width: var(--W); height: var(--H); overflow: hidden; background: var(--ground); }}
+  .canvas {{ position: relative; width: var(--W); height: var(--H); overflow: hidden; background: {bg_css}; }}
+  .circle {{ position: absolute; border-radius: 50%; }}
+  .prop {{ position: absolute; display: block; }}
+  .prop svg {{ display: block; width: 100%; height: auto; overflow: visible; }}
+  .swash {{ position: absolute; left: var(--pad); height: {sw_h}px; overflow: visible; transform-origin: left center; }}
+  .underline {{ position: absolute; left: var(--pad); height: {ul_h}px; width: {ul_w}px;
+               border-radius: {ul_h}px; background: var(--accent); }}
+  .motif {{ position: absolute; right: var(--pad); top: {motif_top}px; width: {motif_w}px; height: {motif_w}px; }}
+  .motif.filled * {{ fill: var(--accent); stroke: none; }}
+  .motif.filled .d {{ fill: #fff; stroke: #fff; stroke-width: 9; stroke-linecap: round; stroke-linejoin: round; }}
+  .motif.filled polyline.d {{ fill: none; }}
+  .motif.outline * {{ fill: none; stroke: var(--accent); stroke-width: 8; stroke-linecap: round; stroke-linejoin: round; }}
+  .shot {{ position: absolute; left: 50%; transform: translateX(-50%); width: {shot_w}px;
+          border-radius: {shot_r}px; box-shadow: 0 {shot_sy}px {shot_sb}px rgba(15,26,45,{shot_a}); }}
+  .shot .screen {{ position: relative; border-radius: {shot_r}px; overflow: hidden; }}
+  .shot img {{ display: block; width: 100%; }}
   h1 {{
-    position: absolute; left: var(--pad); right: var(--pad); top: {top}px;
+    position: absolute; left: var(--pad); right: {h1_right}px; top: {top}px;
     font-family: var(--family); font-weight: var(--weight); font-size: var(--size);
     line-height: 0.98; letter-spacing: var(--tracking); color: var(--ink);
     text-align: {align}; text-transform: {transform}; text-wrap: balance;
+    transform: rotate({h_rot}deg); transform-origin: left bottom;
     line-break: strict;
   }}
   /* Break CJK headlines at phrase/word boundaries, not mid-word. */
   h1:lang(ja) {{ word-break: auto-phrase; }}
   h1:lang(ko) {{ word-break: keep-all; }}
+  /* Chinese: break after punctuation (，、) first; only a line that still overflows breaks mid-phrase. */
+  h1:lang(zh) {{ word-break: keep-all; overflow-wrap: anywhere; }}
   .device {{
     position: absolute; left: 50%; transform: translateX(-50%);
     width: {dev_w}px; padding: {bezel}px; border-radius: {dev_r}px;
@@ -95,6 +129,7 @@ PAGE = """<!doctype html>
   }}
 </style></head>
 <body><div class="canvas">
+  {deco}
   <h1 id="headline">{headline}</h1>
   {stage}
 </div>
@@ -107,11 +142,30 @@ PAGE = """<!doctype html>
 
   const h1 = document.getElementById('headline');
   const hb = h1.getBoundingClientRect();
-  const holder = document.querySelector('.device, .bleed');
-  holder.style.top = Math.round(hb.bottom + {gap}) + 'px';
-  // A short headline lifts the device; grow it so it still bleeds off the bottom edge.
+  let below = hb.bottom;
+  const ul = document.querySelector('.underline');
+  if (ul) {{ ul.style.top = Math.round(hb.bottom + {ul_gap}) + 'px'; below = ul.getBoundingClientRect().bottom; }}
+  const sw = document.querySelector('.swash');
+  if (sw) {{
+    const r0 = document.createRange(); r0.selectNodeContents(h1);
+    const tw0 = r0.getBoundingClientRect().width;
+    sw.style.width = Math.round(Math.min(tw0 * 1.02, W - 2 * PAD)) + 'px';
+    sw.style.top = Math.round(hb.bottom + {ul_gap}) + 'px';
+    sw.style.transform = 'rotate({h_rot}deg)';
+    below = sw.getBoundingClientRect().bottom;
+  }}
+  const holder = document.querySelector('.device, .bleed, .shot');
+  holder.style.top = Math.round(below + {gap}) + 'px';
   const d = holder.getBoundingClientRect();
-  if (d.bottom < H + 40) holder.style.width = (d.width * (H + 40 - d.top) / d.height) + 'px';
+  if (holder.classList.contains('shot') || holder.classList.contains('anchored')) {{
+    // Framed-less screen keeps its width (style shot_width); a short headline anchors it to the
+    // bottom so it bleeds by a fixed amount instead of floating.
+    const bleed = Math.round(H * {bleed_frac});  // per shot: "bleed" sinks the screen further off the bottom
+    if (d.bottom < H + bleed) holder.style.top = Math.round(H + bleed - d.height) + 'px';
+  }} else if (d.bottom < H + 40) {{
+    // A short headline lifts the device; grow it so it still bleeds off the bottom edge.
+    holder.style.width = (d.width * (H + 40 - d.top) / d.height) + 'px';
+  }}
 
   const crop = {crop};
   if (crop) {{
@@ -139,9 +193,11 @@ PAGE = """<!doctype html>
   const a = lum(getComputedStyle(h1).color), b = lum(getComputedStyle(document.body).backgroundColor);
   const fam = getComputedStyle(h1).fontFamily.split(',')[0].replace(/["']/g, '').trim();
   document.body.dataset.report = JSON.stringify({{
-    lines: Math.round(hb.height / lh),
+    lines: Math.round(h1.offsetHeight / lh),  // layout height: a rotated headline's box is taller
     left: Math.round(tb.left), right: Math.round(W - tb.right),
     headlineBottom: Math.round(hb.bottom),
+    shotTop: Math.round(holder.getBoundingClientRect().top),
+    overlap: holder.getBoundingClientRect().top < below,
     contrast: +((Math.max(a, b) + 0.05) / (Math.min(a, b) + 0.05)).toFixed(2),
     font: fam, fontLoaded: fam.startsWith('-') || document.fonts.check(`{weight} 100px "${{fam}}"`),
     imgLoaded: img.naturalWidth > 0,
@@ -242,18 +298,47 @@ def headline_for(shot, locale):
     return next(iter(h.values()))
 
 
-def page_for(spec, shot, W, H, locale=None):
+def load_style(name):
+    """A named style from styles/<name>.json, or None."""
+    if not name:
+        return None
+    if isinstance(name, dict):
+        return name
+    path = os.path.join(STYLES_DIR, f"{name}.json")
+    if not os.path.exists(path):
+        have = ", ".join(sorted(f[:-5] for f in os.listdir(STYLES_DIR) if f.endswith(".json")))
+        sys.exit(f"unknown style '{name}' (have: {have})")
+    with open(path) as f:
+        return json.load(f)
+
+
+def page_for(spec, shot, W, H, locale=None, style=None):
     scale = W / 1290
     px = lambda n: round(n * scale)
-    t, pal = spec.get("type", {}), spec["palette"]
+    t = spec.get("type", {})
+    style = style or load_style(shot.get("style") or spec.get("style"))
+    pal = dict(spec.get("palette", {}))
+    bg = None
+    if style:  # a style brings its own colours; set.json palette is ignored for it
+        bg = style["background"]
+        pal = {"ground": bg[0] if isinstance(bg, list) else bg, "ink": style["ink"], "accent": style["accent"]}
     layout = shot.get("layout", "poster")
     if layout not in LAYOUTS:
         sys.exit(f"{shot['slug']}: layout must be one of {LAYOUTS}")
     src = "file://" + os.path.abspath(shot["screenshot"])
     dev_w = px(1100)  # wide enough that the device always bleeds off the bottom
+    frame = shot.get("frame") or (style or {}).get("frame") or spec.get("frame", "device")
 
     if layout == "bleed":
         stage = f'<div class="bleed"><img src="{html.escape(src)}"></div>'
+    elif style and style.get("device_width"):  # fixed-width device anchored to the bottom
+        dev_w = round(W * style["device_width"])
+        stage = (
+            f'<div class="device anchored"><div class="screen"><img src="{html.escape(src)}">'
+            f'<div class="island"></div></div></div>'
+        )
+    elif frame == "screen":  # no bezel: the screenshot itself, rounded, soft shadow
+        stage = f'<div class="shot"><div class="screen"><img src="{html.escape(src)}"></div></div>'
     else:
         stage = (
             f'<div class="device"><div class="screen"><img src="{html.escape(src)}">'
@@ -265,15 +350,62 @@ def page_for(spec, shot, W, H, locale=None):
             sys.exit(f"{shot['slug']}: breakout layout needs breakout {{x,y,w,h}} in screenshot pixels")
         stage += '<div class="panel"></div>'
 
+    # Decoration comes only from a style file: background, circles, underline, feature motif.
+    deco, feature = "", shot.get("feature")
+    for c in (style or {}).get("circles", []):
+        r = c["r"] * W
+        deco += (f'<div class="circle" style="left:{c["cx"] * W - r:.0f}px;top:{c["cy"] * H - r:.0f}px;'
+                 f'width:{2 * r:.0f}px;height:{2 * r:.0f}px;background:{c["color"]}"></div>')
+    if style and style.get("underline") is True:
+        deco += '<div class="underline"></div>'
+    # Props: illustrations from props/*.svg placed in canvas fractions, behind the screenshot.
+    for pr in (style or {}).get("props", []):
+        if pr.get("slot") == "accent" and shot.get("prop"):  # per-shot illustration in the style's accent slot
+            pr = {**pr, "src": shot["prop"]}
+        if pr.get("slot") == "accent" and shot.get("prop") == "none":
+            continue
+        path = os.path.join(PROPS_DIR, pr["src"] + ".svg")
+        if not os.path.exists(path):
+            sys.exit(f"style prop '{pr['src']}' not found in props/")
+        with open(path) as f:
+            svg = re.sub(r"<\?xml[^>]*>", "", f.read())
+        deco += (f'<div class="prop" style="left:{pr["x"] * W:.0f}px;top:{pr["y"] * H:.0f}px;'
+                 f'width:{pr["w"] * W:.0f}px;transform:rotate({pr.get("rotate", 0)}deg);'
+                 f'opacity:{pr.get("opacity", 1)};color:{pr.get("color", "currentColor")}">{svg}</div>')
+    if style and style.get("underline") == "swash":
+        c = style.get("underline_color", pal["accent"])
+        deco += (f'<svg class="swash" viewBox="0 0 400 30" preserveAspectRatio="none">'
+                 f'<path d="M4 22C110 8 260 6 396 14" stroke="{c}" stroke-width="12" '
+                 f'stroke-linecap="round" fill="none"/></svg>')
+    motif_w = px(150)
+    has_motif = bool(style and style.get("motif") and feature in MOTIFS)
+    if feature and feature not in MOTIFS + ("none",):
+        sys.exit(f"{shot['slug']}: feature must be one of {MOTIFS + ('none',)}")
+    if has_motif:
+        a, b = MOTIF_SVG[feature]
+        deco += f'<svg class="motif {style["motif"]}" viewBox="0 0 100 100">{a}{b}</svg>'
+    size = px(shot.get("size", (style or {}).get("size", t.get("size", 150))))
+    top = px((style or {}).get("top", t.get("top", 190)))
+    shot_w = round(W * (style or {}).get("shot_width", 0.84))
+    bg_css = (f"linear-gradient(180deg, {bg[0]}, {bg[1]})" if isinstance(bg, list) else pal["ground"])
+
     return PAGE.format(
         W=W, H=H, pad=px(t.get("pad", 96)),
+        bg_css=bg_css, deco=deco,
+        h1_right=px(t.get("pad", 96)) + (motif_w + px(40) if has_motif else 0),
+        motif_w=motif_w, motif_top=top + round((size * 0.98 - motif_w) / 2),
+        ul_w=px(300), ul_h=px(14), ul_gap=px(28), sw_h=px(34),
+        h_rot=(style or {}).get("headline_rotate", 0),
+        bleed_frac=shot.get("bleed", 0.035),
+        shot_w=shot_w, shot_r=round(shot_w * 0.085), shot_sy=px(24), shot_sb=px(70),
+        shot_a=(style or {}).get("shadow", 0.10),
         ground=shot.get("ground", pal["ground"]), ink=shot.get("ink", pal["ink"]),
         accent=pal.get("accent", pal["ink"]),
         family=t.get("family", "-apple-system, 'SF Pro Display', system-ui, sans-serif"),
         font_css=t.get("css", ""),
-        weight=t.get("weight", 800), tracking=t.get("tracking", "-0.035em"),
-        size=px(shot.get("size", t.get("size", 150))),
-        top=px(t.get("top", 190)),
+        weight=(style or {}).get("weight", t.get("weight", 800)), tracking=t.get("tracking", "-0.035em"),
+        size=size,
+        top=top,
         align=t.get("align", "left"),
         transform="uppercase" if t.get("case") == "upper" else "none",
         headline=html.escape(headline_for(shot, locale)),
@@ -315,6 +447,8 @@ def gate(spec, shot, rep, W, locale=None):
     width = sum(2 if unicodedata.east_asian_width(c) in "WF" else 1 for c in text)
     if width > 40:
         warns.append(f"headline {width} width units (aim ≤ 32; a CJK character counts 2)")
+    if rep.get("overlap"):
+        fails.append("screenshot overlaps the headline block")
     if rep["headlineBottom"] > W * 0.62:
         warns.append("headline block is tall; device starts low")
     return fails, warns
@@ -326,6 +460,8 @@ def main():
     ap.add_argument("--only", type=int, help="render one shot (1-based)")
     ap.add_argument("--locale", help="render this locale of {locale: text} headlines (output: final/<locale>/)")
     ap.add_argument("--out", help="output dir (default: <spec dir>/final)")
+    ap.add_argument("--style", help="comma list of styles from styles/*.json ('both' = shopping-checklist,"
+                                    "notification-reminder); each renders to <out>/<style>/")
     a = ap.parse_args()
 
     spec_dir = os.path.dirname(os.path.abspath(a.spec))
@@ -337,19 +473,31 @@ def main():
                  '"storyboard_approved": true in set.json only after they say yes.')
     os.chdir(spec_dir)  # screenshot paths in set.json are relative to it
     W, H = SIZES[str(spec.get("size", "6.9"))]
-    out_dir = os.path.abspath(a.out or os.path.join("final", a.locale or ""))
-    os.makedirs(out_dir, exist_ok=True)
+    base_out = os.path.abspath(a.out or os.path.join("final", a.locale or ""))
     binary = find_chrome()
+    names = (a.style or "").replace("both", "shopping-checklist,notification-reminder")
+    variants = [(n, load_style(n)) for n in names.split(",") if n] or [(None, None)]
+    total_fail = 0
+    for style_name, style in variants:
+        out_dir = os.path.join(base_out, style_name) if style_name else base_out
+        os.makedirs(out_dir, exist_ok=True)
+        total_fail += render_set(spec, a, W, H, binary, out_dir, spec_dir, style, style_name)
+    if len(variants) > 1:
+        print("compare: " + ", ".join(os.path.relpath(os.path.join(base_out, n, "sheet.png")) for n, _ in variants))
+    sys.exit(1 if total_fail else 0)
+
+
+def render_set(spec, a, W, H, binary, out_dir, spec_dir, style, style_name):
 
     shots = spec["shots"]
     todo = [a.only - 1] if a.only else range(len(shots))
-    total_fail = 0
+    total_fail, layout = 0, []
     with tempfile.TemporaryDirectory() as tmp:
         for i in todo:
             shot = shots[i]
             page = os.path.join(tmp, f"{i}.html")
             with open(page, "w") as f:
-                f.write(page_for(spec, shot, W, H, a.locale))
+                f.write(page_for(spec, shot, W, H, a.locale, style))
             png = os.path.join(out_dir, f"{i + 1:02d}-{shot['slug']}.png")
             chrome(binary, "file://" + page, W, H, screenshot=png)
             m = re.search(r'data-report="([^"]*)"', chrome(binary, "file://" + page, W, H))
@@ -362,6 +510,11 @@ def main():
                 print(f"   FAIL {x}")
             for x in warns:
                 print(f"   WARN {x}")
+            layout.append({"png": os.path.relpath(png, spec_dir), "slug": shot["slug"],
+                           "headline": headline_for(shot, a.locale), "screenshot": shot["screenshot"],
+                           "layout": shot.get("layout", "poster"), "feature": shot.get("feature"),
+                           "style": style_name or spec.get("style"), "size": [W, H], "measured": rep,
+                           "fails": fails, "warns": warns})
 
         # Thumbnail sheet: the set as it appears in search results, on light and dark.
         finals = sorted(f for f in os.listdir(out_dir) if re.match(r"\d\d-.*\.png$", f))
@@ -373,11 +526,17 @@ def main():
             sheet = os.path.join(tmp, "sheet.html")
             with open(sheet, "w") as f:
                 f.write(SHEET.format(W=sw, H=sh, tw=tw, imgs=imgs))
-            sheet_png = os.path.join(out_dir, "..", f"sheet-{a.locale}.png") if a.locale else os.path.join(spec_dir, "sheet.png")
+            if style_name:
+                sheet_png = os.path.join(out_dir, "sheet.png")
+            else:
+                sheet_png = os.path.join(out_dir, "..", f"sheet-{a.locale}.png") if a.locale else os.path.join(spec_dir, "sheet.png")
             chrome(binary, "file://" + sheet, sw, sh, screenshot=sheet_png)
             print(f"sheet: {os.path.relpath(sheet_png)}")
 
-    sys.exit(1 if total_fail else 0)
+    # What was rendered and measured, per shot: the record to review and edit set.json from.
+    with open(os.path.join(out_dir, "layout.json"), "w") as f:
+        json.dump(layout, f, ensure_ascii=False, indent=2)
+    return total_fail
 
 
 if __name__ == "__main__":

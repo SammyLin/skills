@@ -6,9 +6,11 @@ description: >-
   convey as a storyboard, and renders nothing until the user approves that storyboard. Every shot is
   rendered deterministically in HTML/CSS via headless Chrome at exact store sizes (no image model
   redrawing the UI), gated against house rules (two-line headlines, contrast, no fake proof, no
-  emoji, no gradients) and critiqued as it appears in search results. Use when the user asks for
-  App Store / Google Play / ASO screenshots, store listing images (上架圖), or wants existing
-  screenshots redesigned.
+  emoji, no gradients unless a named style brings them) and critiqued as it appears in search
+  results. Ready-made styles (shopping-checklist, notification-reminder, or your own in styles/)
+  can be rendered side by side. Use when the user asks for App Store / Google Play / ASO
+  screenshots, store listing images (上架圖), wants existing screenshots redesigned, or asks for a
+  style by name.
 user-invocable: true
 argument-hint: "[App Store URL | screenshots folder | 'translate <locale>']"
 ---
@@ -192,6 +194,33 @@ Avoid white or pale grey grounds (they vanish in the store), avoid a ground that
 UI's own background, and avoid the assistant palette (violet/indigo, cream with terracotta) unless
 it is truly the brand. State the choice with one line of reasoning; the user can override.
 
+**Named styles** (`styles/*.json`): an alternative to a hand-picked palette. A style brings its
+own background (one colour, or a two-stop top-to-bottom gradient), ink, accent, and the only
+decoration allowed in this skill: soft background circles, a short accent underline under the
+headline, and one small **feature motif** per shot (`"feature"`: `discount` price tag, `alert`
+bell, `checklist` check box, `compare` two bars, or `none`), drawn as a plain outline or filled
+shape beside the headline. A style may also drop the device frame (`"frame": "screen"`: the
+screenshot itself with rounded corners and a soft shadow, `shot_width` of the canvas, bleeding a
+little off the bottom).
+
+| Style | Look | Suits |
+| --- | --- | --- |
+| `shopping-checklist` | Cream `#FFF8E6`, navy ink, mustard underline, outline motif | Shopping, lists, deals, food |
+| `notification-reminder` | Lavender→sky gradient, navy ink, red filled motif, two quiet circles | Alerts, reminders, trackers |
+
+A style's prop marked `"slot": "accent"` (the bell in `notification-reminder`) can be swapped per
+shot with `"prop": "tag" | "receipt" | "camera" | "calendar" | "badge" | "bell" | "none"`, so each shot
+gets an illustration that matches its claim. A shot's `"bleed"` (fraction of the canvas height, default 0.035) sinks an anchored
+screen further off the bottom, to keep something at the bottom of the screen out of frame.
+
+Set `"style": "<name>"` in `set.json` (or per shot), or compare styles without touching the set:
+`render.py set.json --only 1 --style shopping-checklist,notification-reminder` (`both` is the
+same pair) writes `final/<style>/` per style, each with its own `sheet.png` and `layout.json`.
+A style's colours replace `palette`; the gate still checks contrast, two lines, edges and proof.
+To add a style, copy a JSON in `styles/`, change it, and note in one line what it suits. When
+the user names a style, use it as given; otherwise propose a direction first and offer styles as
+alternatives. Style ground still must not match the app's own background; if it does, say so.
+
 **Type:** one family. Default is the system face (SF Pro via `-apple-system`), weight 800,
 tracking -0.035em. A brand font goes in `type.family` with its stylesheet `<link>` in `type.css`;
 the gate fails if it does not load. Sentence case reads more premium; `"case": "upper"` is
@@ -291,7 +320,10 @@ every FAIL. Treat every WARN as wrong unless you can defend it in one sentence.
 House rules the renderer enforces by construction, so do not work around them: no gradients, no
 glows, no shadow on anything at rest (only the breakout panel has one), no decorative shapes,
 sparkles, arrows or blobs, no pill badge or small label above the headline, no styled accent word
-in the headline (one face, one colour), no invented UI.
+in the headline (one face, one colour), no invented UI. A named style is the only exception, and
+only for what its JSON declares (gradient, circles, underline, one motif, the frameless screen's
+soft shadow). Never add decoration outside a style file, and never put a motif or circle over the
+app screenshot. The app's pixels are only scaled and rounded, never retouched.
 
 ## 8. Look
 

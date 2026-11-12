@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 380"><defs>
+<linearGradient id="t" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#FF6B7A"/><stop offset=".6" stop-color="#F0213A"/><stop offset="1" stop-color="#C40021"/></linearGradient>
+<filter id="s"><feDropShadow dx="0" dy="14" stdDeviation="14" flood-color="#5a4bb0" flood-opacity=".22"/></filter></defs>
+<g transform="rotate(-18 200 190)" filter="url(#s)">
+<path d="M120 70H330a22 22 0 0 1 22 22V288a22 22 0 0 1-22 22H120L40 190Z" fill="url(#t)"/>
+<circle cx="108" cy="190" r="20" fill="#F1ECFF"/>
+<path d="M140 86H320" stroke="#fff" stroke-width="10" stroke-linecap="round" opacity=".35"/>
+<text x="245" y="232" font-family="-apple-system, Helvetica Neue, sans-serif" font-size="132" font-weight="900" fill="#fff" text-anchor="middle">%</text></g>
+<g stroke="#F5BE32" stroke-width="12" stroke-linecap="round"><path d="M350 40l20-26"/><path d="M372 84l26-8"/></g></svg>
