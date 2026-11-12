@@ -18,6 +18,7 @@
 | [`web-validate`](skills/web-validate/) | 在真的瀏覽器裡檢查部署後的網頁、帶回截圖，公開網頁或需要登入的都行（有 passkey 的公司 SSO、帳號密碼）：你手動登入一次，agent 用那份 profile 的複本。先跑設定檢查，會幫你裝 agent-browser、帶你完成第一次登入。 | 自己寫的 |
 | [`mobile-app-design`](skills/mobile-app-design/) | 把原生 iOS（SwiftUI）和 Android（Compose）App 當整體設計：產品說明、畫面地圖和流程、App 自己的視覺識別（避開被用到爛的預設風格，附配色檢查）、DESIGN.md 的 token 和元件、每個畫面每個狀態、各平台自己的慣例。 | 自己寫的 |
 | [`mobile-layout-stability`](skills/mobile-layout-stability/) | 把 iOS 或 Android App 每個畫面的跳動找出來修好（skeleton 和內容不一致、控制項晚出現、清單跳、捲動位置跑掉），用載入中和載入完成的截圖比對證明。 | 自己寫的 |
+| [`mobile-analytics`](skills/mobile-analytics/) | 消費者 iOS 和 Android App 在 Firebase／GA4 上的埋點與 dashboard 標準：兩平台共用一份埋點計畫（事件、隱私、指標定義）、從獲客到留存和營收的固定 dashboard，加上檢查兩邊程式碼都照計畫埋的腳本。 | 改編自 [Accoil/product-tracking-skills](https://github.com/Accoil/product-tracking-skills)，MIT |
 
 ### 成品範例
 

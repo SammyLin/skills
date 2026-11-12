@@ -35,6 +35,7 @@ aisle, at a desk), and what makes this app different. Every later choice should 
   everything else is a push or a sheet. Draw it as a list or a mermaid flowchart.
 - **Primary flows**: the 2–3 paths that matter most (first launch → first value, the daily
   check, the money/permission moment), step by step, with the fewest taps.
+  These flows are the funnels the `mobile-analytics` skill instruments.
 - **Hierarchy per screen**: what the eye hits first, second, third. One primary action.
 - **Density**: how many items a screen shows; decide it once for the app.
 

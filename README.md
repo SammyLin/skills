@@ -19,6 +19,7 @@ Documented in English and Traditional Chinese; they answer in the language you w
 | [`web-validate`](skills/web-validate/) | Checks a deployed page in a real browser and brings back screenshots, public or behind a login the agent can't do (SSO with passkeys, a password): you sign in once by hand, the agent works on a copy of that profile. A setup gate installs agent-browser and walks you through the first login. | Mine |
 | [`mobile-app-design`](skills/mobile-app-design/) | Designs a native iOS (SwiftUI) and Android (Compose) app as a whole: brief, screen map and flows, a visual identity of its own (steers clear of overused default looks, with a palette checker), tokens and components in DESIGN.md, every screen in every state, each platform's own idiom. | Mine |
 | [`mobile-layout-stability`](skills/mobile-layout-stability/) | Finds and fixes layout shift across every screen of an iOS or Android app (skeleton vs content, late controls, jumping lists, lost scroll) and proves it with a loading-vs-loaded screenshot checker. | Mine |
+| [`mobile-analytics`](skills/mobile-analytics/) | Tracking and dashboard standard for consumer iOS and Android apps on Firebase / GA4: one shared tracking plan (events, privacy, metric definitions), a fixed dashboard set from acquisition to retention and revenue, and a checker that holds both codebases to the plan. | Adapted from [Accoil/product-tracking-skills](https://github.com/Accoil/product-tracking-skills), MIT |
 
 ### What they make
 

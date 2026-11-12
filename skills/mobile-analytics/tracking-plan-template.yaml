@@ -1,0 +1,243 @@
+# tracking-plan.yaml: the single source of truth for Firebase Analytics on iOS and Android.
+# Example product: a price-watch app (search a product, set a price alert, get notified).
+# Replace the example events; keep the structure. Lint: plan_check.py tracking-plan.yaml
+
+meta:
+  product: PriceWatch
+  version: 1.0.0             # bump minor for added events, major for renames/removals
+  updated: 2026-11-12
+  owner: product
+  destinations: [firebase]   # Firebase Analytics -> GA4 property -> BigQuery export
+  ga4_property: "123456789"  # BigQuery dataset analytics_123456789
+  pii_policy: none
+  internal_user_policy: "Debug builds use the -dev Firebase project; TestFlight / internal testers set is_internal=true; every dashboard filters it"
+  core_value_event: alert_created
+
+identity:
+  user_id: backend opaque ID (usr_*), setUserID on sign_up and login, setUserID(nil) on logout
+  reset: resetAnalyticsData() on account deletion only
+
+# GA4 key events (max 30). Mark them in GA4 Admin > Key events.
+key_events: [alert_created, sign_up, in_app_purchase]
+
+# setUserProperty, registered as user-scoped custom dimensions (max 25).
+user_properties:
+  - {name: is_logged_in, type: boolean}
+  - {name: subscription_status, type: string, enum: [free, trial, paid, expired]}
+  - {name: is_internal, type: boolean}
+
+# GA4 dimensions that exist without code. Charts may split by these.
+builtin_dimensions: [platform, app_version, os_version, device_category, country, language,
+                     first_user_source, first_user_medium, first_user_campaign]
+
+# Logged by Firebase without code (reserved names). Metrics may cite these.
+auto_events: [first_open, session_start, user_engagement, app_update, app_remove,
+              notification_open, notification_receive, in_app_purchase,
+              app_store_subscription_convert, app_store_subscription_renew,
+              app_store_subscription_cancel]
+
+# The screen map from DESIGN.md. screen_view.screen_name must be one of these.
+screens: [onboarding, home, search, item_detail, alerts, paywall, settings]
+
+# properties[].ga4: dimension | metric -> register as an event-scoped custom definition
+# (50 each). Omitted -> BigQuery only.
+events:
+  # -- Lifecycle --
+  - name: tutorial_begin                   # GA4 recommended
+    category: lifecycle
+    description: Onboarding starts
+    trigger: First onboarding page appears
+    properties: []
+
+  - name: onboarding_step_completed
+    category: lifecycle
+    description: User finishes one onboarding page
+    trigger: Next tapped and the page's choice saved
+    properties:
+      - {name: step, type: integer, required: true, ga4: dimension}
+      - {name: step_name, type: string, enum: [welcome, categories, notifications], required: true, ga4: dimension}
+
+  - name: tutorial_complete                # GA4 recommended
+    category: lifecycle
+    description: User reaches home after onboarding
+    trigger: Home appears after the last onboarding page
+    properties:
+      - {name: skipped_count, type: integer, required: true}
+
+  - name: sign_up                          # GA4 recommended
+    category: lifecycle
+    description: Account created
+    trigger: Backend returns the new user ID (then setUserID)
+    properties:
+      - {name: method, type: string, enum: [apple, google, email], required: true, ga4: dimension}
+
+  - name: push_permission_answered
+    category: lifecycle
+    description: User answers the system notification prompt
+    trigger: System prompt callback
+    properties:
+      - {name: is_granted, type: boolean, required: true, ga4: dimension}
+      - {name: prompt_source, type: string, enum: [onboarding, alert_created, settings], required: true, ga4: dimension}
+
+  # -- Core value --
+  - name: search_performed                 # custom: GA4 `search` would carry the raw search_term
+    category: core_value
+    description: Search results returned
+    trigger: Results (or empty state) shown
+    properties:
+      - {name: query_length, type: integer, required: true}
+      - {name: result_count, type: integer, required: true, ga4: metric}
+
+  - name: alert_created
+    category: core_value
+    description: User sets a price alert (core value action)
+    trigger: Backend confirms the alert
+    properties:
+      - {name: item_id, type: string, required: true}
+      - {name: alert_type, type: string, enum: [any_drop, target_price], required: true, ga4: dimension}
+      - {name: entry_source, type: string, enum: [search, item_detail, deep_link, push], required: true, ga4: dimension}
+
+  - name: price_drop_viewed
+    category: core_value
+    description: User looks at a price drop on an item they watch
+    trigger: Item detail appears with a drop badge
+    properties:
+      - {name: item_id, type: string, required: true}
+      - {name: entry_source, type: string, enum: [search, item_detail, deep_link, push], required: true, ga4: dimension}
+
+  - name: share                            # GA4 recommended
+    category: engagement
+    description: Item shared to another app
+    trigger: Share sheet reports completion
+    properties:
+      - {name: method, type: string, enum: [line, messages, copy_link, other], required: true, ga4: dimension}
+      - {name: content_type, type: string, enum: [item], required: true, ga4: dimension}
+      - {name: item_id, type: string, required: true}
+
+  # -- Navigation --
+  - name: screen_view                      # GA4 recommended; auto screen reporting is off
+    category: navigation
+    description: Screen appears
+    trigger: Screen root onAppear / LaunchedEffect, once per appearance
+    properties:
+      - {name: screen_name, type: string, enum: screens, required: true}
+
+  # -- Monetization (purchases themselves are auto events) --
+  - name: paywall_viewed
+    category: monetization
+    description: Paywall shown
+    trigger: Paywall appears
+    properties:
+      - {name: paywall_source, type: string, enum: [alert_limit, settings, onboarding], required: true, ga4: dimension}
+
+# Every chart cites one of these. A metric with no question gets deleted.
+metrics:
+  - name: active_users
+    question: How many people use the app each day / week / month?
+    definition: GA4 active users (user_engagement) per day / 7d / 28d; stickiness = DAU / MAU
+    events: [user_engagement]
+
+  - name: activation_rate
+    question: What share of new installs get value on day 0?
+    definition: Users with alert_created within 24h of first_open / users with first_open, by install day
+    events: [first_open, alert_created]
+
+  - name: onboarding_funnel
+    question: Where does onboarding lose people?
+    definition: Closed funnel first_open > tutorial_begin > onboarding_step_completed by step > tutorial_complete > alert_created, within 1 day; sign_up shown as an optional step
+    events: [first_open, tutorial_begin, onboarding_step_completed, tutorial_complete, sign_up, alert_created]
+
+  - name: core_retention
+    question: Do people come back for value, not just open the app?
+    definition: Of users with first_open in week W, share with alert_created or price_drop_viewed on day 1 / 7 / 30
+    events: [first_open, alert_created, price_drop_viewed]
+
+  - name: core_actions_per_user
+    question: How much value does an active user get?
+    definition: alert_created count / active users, weekly
+    events: [alert_created, user_engagement]
+
+  - name: search_success
+    question: Do searches find something to watch?
+    definition: search_performed with result_count > 0 / all search_performed, weekly
+    events: [search_performed]
+
+  - name: share_rate
+    question: Do users bring others in?
+    definition: Users with share / active users, weekly, by method
+    events: [share, user_engagement]
+
+  - name: push_opt_in_rate
+    question: Will people let us notify them?
+    definition: push_permission_answered with is_granted=true / all push_permission_answered, by prompt_source
+    events: [push_permission_answered]
+
+  - name: push_return_rate
+    question: Do pushes bring people back to value?
+    definition: Users with price_drop_viewed entry_source=push / users with notification_open, weekly
+    events: [notification_open, price_drop_viewed]
+
+  - name: paywall_conversion
+    question: Does the paywall convert, and from where?
+    definition: Users with in_app_purchase within 1 day of paywall_viewed / users with paywall_viewed, by paywall_source
+    events: [paywall_viewed, in_app_purchase]
+
+  - name: trial_conversion
+    question: Do trials turn into paid?
+    definition: app_store_subscription_convert / trials started in the cohort (Android from auto events; iOS from App Store Connect or RevenueCat until verified in BigQuery)
+    events: [in_app_purchase, app_store_subscription_convert]
+
+  - name: version_adoption
+    question: How fast do users move to the new release?
+    definition: Share of active users per app_version, daily
+    events: [user_engagement]
+
+  - name: event_volume
+    question: Is tracking still working on both platforms?
+    definition: Daily count of each plan event by platform and app_version in BigQuery; flag drops > 50% day over day or an event missing on one platform
+    events: [session_start, alert_created, screen_view]
+
+# Not from Analytics events; listed so dashboards can cite them.
+external_metrics:
+  - name: crash_free_users
+    source: Crashlytics (Firebase console; Crashlytics BigQuery export for per-version charts)
+  - name: revenue
+    source: App Store Connect / Play Console (or RevenueCat)
+
+dashboards:
+  - name: Health
+    charts:
+      - {title: DAU / WAU / MAU, metric: active_users, split_by: platform}
+      - {title: Stickiness (DAU/MAU), metric: active_users}
+      - {title: Crash-free users, metric: crash_free_users, split_by: platform}
+  - name: Acquisition
+    charts:
+      - {title: Day-0 activation by source, metric: activation_rate, split_by: first_user_source}
+      - {title: D7 core retention by source, metric: core_retention, split_by: first_user_source}
+  - name: Activation
+    charts:
+      - {title: Onboarding funnel, metric: onboarding_funnel, split_by: platform}
+      - {title: Day-0 activation, metric: activation_rate}
+      - {title: Push opt-in, metric: push_opt_in_rate, split_by: prompt_source}
+  - name: Retention
+    charts:
+      - {title: D1 / D7 / D30 core retention by install week, metric: core_retention}
+      - {title: Push return rate, metric: push_return_rate, split_by: platform}
+  - name: Core value
+    charts:
+      - {title: Alerts per active user, metric: core_actions_per_user, split_by: platform}
+      - {title: Searches with results, metric: search_success, split_by: platform}
+      - {title: Sharing users, metric: share_rate, split_by: method}
+  - name: Monetization
+    charts:
+      - {title: Paywall conversion, metric: paywall_conversion, split_by: paywall_source}
+      - {title: Trial to paid, metric: trial_conversion, split_by: platform}
+      - {title: Revenue, metric: revenue}
+  - name: Release
+    charts:
+      - {title: Version adoption, metric: version_adoption, split_by: platform}
+      - {title: Crash-free users by version, metric: crash_free_users, split_by: app_version}
+      - {title: Activation by version, metric: activation_rate, split_by: app_version}
+  - name: Data quality
+    charts:
+      - {title: Event volume by platform, metric: event_volume, split_by: platform}
