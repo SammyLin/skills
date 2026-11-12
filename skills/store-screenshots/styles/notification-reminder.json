@@ -1,0 +1,24 @@
+{
+  "name": "notification-reminder",
+  "mood": "Soft iOS-like tech feel: lavender-to-sky gradient with blurred colour blobs, a glossy yellow bell with a red alert badge, heavy navy headline with a blue hand-drawn underline.",
+  "suits": "Alerts, reminders, trackers, utilities.",
+  "background": ["#F1ECFF", "#DCE8FF"],
+  "ink": "#14233B",
+  "accent": "#E60023",
+  "weight": 900,
+  "size": 158,
+  "top": 330,
+  "headline_rotate": 0,
+  "underline": "swash",
+  "underline_color": "#2F6BEA",
+  "motif": null,
+  "circles": [],
+  "props": [
+    { "src": "blob", "x": 0.62, "y": 0.22, "w": 0.70, "color": "#C9D9FF", "opacity": 0.9 },
+    { "src": "blob", "x": -0.30, "y": 0.50, "w": 0.70, "color": "#F7CFE6", "opacity": 0.8 },
+    { "src": "blob", "x": 0.70, "y": 0.72, "w": 0.55, "color": "#D7CCFF", "opacity": 0.8 },
+    { "src": "bell", "x": 0.64, "y": 0.065, "w": 0.32, "rotate": 0 }
+  ],
+  "frame": "device",
+  "device_width": 0.74
+}

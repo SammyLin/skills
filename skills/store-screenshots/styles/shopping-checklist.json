@@ -1,0 +1,23 @@
+{
+  "name": "shopping-checklist",
+  "mood": "Warm editorial shopping list: cream paper, a notepad with red checks, a yellow highlighter, a hand-drawn yellow underline, heavy navy headline set at a slight angle.",
+  "suits": "Shopping, lists, deals, food, household apps.",
+  "background": ["#FFF8E4", "#FBEBC3"],
+  "ink": "#14233B",
+  "accent": "#F5BE32",
+  "weight": 900,
+  "size": 158,
+  "top": 250,
+  "headline_rotate": -5,
+  "underline": "swash",
+  "underline_color": "#F5BE32",
+  "motif": null,
+  "circles": [],
+  "props": [
+    { "src": "notepad", "x": -0.10, "y": 0.165, "w": 0.62, "rotate": -7 },
+    { "src": "highlighter", "x": 0.80, "y": 0.10, "w": 0.115, "rotate": 222 },
+    { "src": "rays", "x": 0.80, "y": 0.035, "w": 0.12, "rotate": 10 }
+  ],
+  "frame": "device",
+  "device_width": 0.74
+}
