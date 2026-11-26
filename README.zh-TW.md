@@ -20,6 +20,7 @@
 | [`mobile-app-design`](skills/mobile-app-design/) | 把原生 iOS（SwiftUI）和 Android（Compose）App 當整體設計：產品說明、畫面地圖和流程、App 自己的視覺識別（避開被用到爛的預設風格，附配色檢查）、DESIGN.md 的 token 和元件、每個畫面每個狀態、各平台自己的慣例。 | 自己寫的 |
 | [`mobile-layout-stability`](skills/mobile-layout-stability/) | 把 iOS 或 Android App 每個畫面的跳動找出來修好（skeleton 和內容不一致、控制項晚出現、清單跳、捲動位置跑掉），用載入中和載入完成的截圖比對證明。 | 自己寫的 |
 | [`mobile-analytics`](skills/mobile-analytics/) | 消費者 iOS 和 Android App 在 Firebase／GA4 上的埋點與 dashboard 標準：兩平台共用一份埋點計畫（事件、隱私、指標定義）、從獲客到留存和營收的固定 dashboard，加上檢查兩邊程式碼都照計畫埋的腳本。 | 改編自 [Accoil/product-tracking-skills](https://github.com/Accoil/product-tracking-skills)，MIT |
+| [`mobile-cert-pinning`](skills/mobile-cert-pinning/) | 幫連自家後台的 iOS 和 Android App 做憑證綁定：綁憑證供應商可能用的所有根憑證（附 Cloudflare 清單），兩個平台共用一份清單；檢查腳本會抓出兩邊不一致、debug-overrides 的陷阱和快到期，每天核對線上憑證鏈，上架前一定做錯誤公鑰測試。也能檢查現有的 App。 | 自己寫的 |
 
 ### 成品範例
 

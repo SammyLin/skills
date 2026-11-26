@@ -133,6 +133,8 @@ basement, a train, a lift). Design and build those cases for every call, not onl
   the row.
 - **Measure honestly.** Analytics outcome events fire only after success; a failed request logs
   nothing (or a Crashlytics non-fatal), never a zero-result or empty outcome.
+- **Pinned.** Calls to our own backend are certificate-pinned on both platforms before release
+  (use the mobile-cert-pinning skill); a pin failure shows the same error state as no network.
 - **Testable.** A debug switch fakes offline / slow / server error in the network layer
   (`-netSim offline|slow|5xx`), so every screen can be screenshotted in each state; also try the
   real thing (iOS Network Link Conditioner "Very Bad Network", Android emulator network
