@@ -10,6 +10,7 @@
 
 | Skill | 用途 | 來源 |
 | --- | --- | --- |
+| [`brand-design-system`](skills/brand-design-system/) | 三種不同 Logo 概念、品牌定案、內嵌實際 Logo 的離線 HTML 設計系統、UI 基礎與元件、JSON tokens 及 ZIP。 | 自己寫的 |
 | [`store-screenshots`](skills/store-screenshots/) | App Store 與 Google Play 上架圖：從程式碼找出使用者利益，先給你確認分鏡表才產圖，用 App 真實畫面產出商店規格尺寸，附檢查與評分，支援多語系。 | 改寫自 [adamlyttleapps](https://github.com/adamlyttleapps/claude-skill-aso-appstore-screenshots)，參考 [taste-skill](https://github.com/leonxlnx/taste-skill)、[shots](https://github.com/hypersocialinc/shots)、[store-screenshots](https://github.com/LeeHueeng/store-screenshots) |
 | [`humanizer-zh`](skills/humanizer-zh/) | 把中文文字的 AI 味拿掉，寫給台灣讀者：49 種模式、全形標點、中國用語對照，加上機械檢查腳本。 | 以 [nagameTW/formosa-humanizer](https://github.com/nagameTW/formosa-humanizer) 為基礎，MIT |
 | [`grill-me`](skills/grill-me/) | 開工前拷問計畫：重大與中等的決策都用選擇題問你，並追問每個答案帶來的影響，只有小事自己決定，值得記錄的才寫 ADR。 | 改寫自 Matt Pocock 的 [`grill-with-docs`](https://github.com/mattpocock/skills)，MIT |
