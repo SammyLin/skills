@@ -10,6 +10,10 @@
 npx skills add SammyLin/skills -s brand-design-system --global
 ```
 
+## Logo 產圖工具建議
+
+優先使用 ChatGPT 的圖片生成功能，或具備圖片生成能力的 Codex 製作 Logo。ChatGPT 適合探索視覺方向與反覆微調；Codex 適合在 Repository 中管理素材及實作 Design System。若目前 agent 無法產圖，先提供可直接貼入 ChatGPT 的三款提示詞，將確認的原始圖片帶回流程，不以程式繪製的臨時圖案冒充正式 Logo。
+
 ## 使用方式
 
 告訴 agent：「使用 brand-design-system 幫我的 App 設計 Logo 與 Design System，先提供三種不同方向。」
