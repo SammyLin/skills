@@ -2,7 +2,7 @@
 
 English · [繁體中文](README.zh-TW.md)
 
-Create a brand identity from three distinct concepts, refine the chosen logo, and build a portable design system around the approved asset.
+Start with a product-manager discovery interview and an approved brief, explore three distinct logo concepts, refine the chosen identity, and build a portable design system with a reusable product illustration library.
 
 ## Install
 
@@ -16,10 +16,12 @@ Prefer ChatGPT image generation or Codex with image-generation access for logo c
 
 ## Usage
 
-Ask your agent: "Use brand-design-system to design my app's logo and design system. Show three distinct concepts first."
+Ask your agent: "Use brand-design-system to design my app's logo and design system. Interview me as a product manager and confirm the brief before generating images. Then show three distinct logo concepts and plan reusable product illustrations."
 
 The skill preserves approved logo bytes, separates brand and semantic UI colors, defines typography and components, and delivers offline HTML, original assets, JSON tokens, documentation and a ZIP. Image generation is capability-dependent; unproduced assets are marked pending.
 
+The workflow requires approval before image generation, identity approval before illustration planning, and a representative illustration style approval before batch production. It delivers individual illustration files, an asset manifest and an offline gallery, not just a mood board.
+
 Use this skill for brand identity and foundations; use mobile-app-design for comprehensive native screen and flow design, and mobile-layout-stability for implementation-level layout checks.
 
-See [SKILL.md](SKILL.md), [delivery conventions](references/delivery.md), and the [worked example](references/parkbird-example.md).
+See [SKILL.md](SKILL.md), [discovery and illustration workflow](references/discovery-and-illustrations.md), [delivery conventions](references/delivery.md), and the [worked example](references/parkbird-example.md).

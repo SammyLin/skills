@@ -17,8 +17,12 @@ Values above are illustrative, not defaults for every brand. Keep CSS variables 
 ## HTML checklist
 Use semantic landmarks and sections for brand, color, type, foundations, components and product example. Show the approved logo prominently; embed actual bytes as base64 with the correct MIME type, descriptive alt text, and intrinsic aspect ratio. Include a separately packaged original. Use inline CSS, system fallbacks and inline JS for actual interactions. Avoid external fonts or scripts if promising offline support. Label visual-only controls as examples. Include responsive layouts, focus-visible styles and reduced motion. If no approved logo is accessible, state the blocker; never substitute an unrelated illustration.
 
+## Illustration delivery
+Keep originals and optimized exports distinguishable. Store independently usable files in `assets/illustrations/` with stable kebab-case filenames based on purpose, not generation order. Use transparent PNG for isolated assets where needed and WebP/PNG for scenes. Include `assets/manifest.json` with id, role, screen/state, relative path, width, height, MIME type, background, alt-text guidance, approval status and source/reference. For pending assets use null path and mark pending, never a fake file. Embed actual thumbnails or original images into the standalone offline HTML. Include intended layout, aspect ratio and localization guidance. Preserve originals and avoid cropping characters or baking text into imagery.
+
 ## QA checklist
 - Approved source and packaged logo hashes match; embedded data decodes to same bytes.
+- Approved discovery brief and illustration style approval recorded; illustration files, manifest and gallery agree, including pending statuses.
 - JSON parses and all referenced tokens exist; CSS matches documented tokens.
 - ZIP integrity, paths and standalone HTML checked.
 - Visual check at narrow and wide widths where possible; verify controls and keyboard interaction.
