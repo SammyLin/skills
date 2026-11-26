@@ -21,6 +21,7 @@ Documented in English and Traditional Chinese; they answer in the language you w
 | [`mobile-app-design`](skills/mobile-app-design/) | Designs a native iOS (SwiftUI) and Android (Compose) app as a whole: brief, screen map and flows, a visual identity of its own (steers clear of overused default looks, with a palette checker), tokens and components in DESIGN.md, every screen in every state, each platform's own idiom. | Mine |
 | [`mobile-layout-stability`](skills/mobile-layout-stability/) | Finds and fixes layout shift across every screen of an iOS or Android app (skeleton vs content, late controls, jumping lists, lost scroll) and proves it with a loading-vs-loaded screenshot checker. | Mine |
 | [`mobile-analytics`](skills/mobile-analytics/) | Tracking and dashboard standard for consumer iOS and Android apps on Firebase / GA4: one shared tracking plan (events, privacy, metric definitions), a fixed dashboard set from acquisition to retention and revenue, and a checker that holds both codebases to the plan. | Adapted from [Accoil/product-tracking-skills](https://github.com/Accoil/product-tracking-skills), MIT |
+| [`mobile-cert-pinning`](skills/mobile-cert-pinning/) | Certificate pinning for iOS and Android apps that call your own backend: pins every root your TLS provider may use (Cloudflare list included), one list for both platforms, a checker for drift, a debug-overrides trap and expiry, a daily live-chain check, and a wrong-pin test before shipping. Also audits existing apps. | Mine |
 
 ### What they make
 
