@@ -154,8 +154,10 @@ Report all three with what you saw (screenshots or log lines), not "should work"
 
 ## Auditing an app that may already ship
 
-For each app repo: list the hosts its code calls (base URLs in both platforms), find
-`NSPinnedDomains` and `networkSecurityConfig`, run `check_pins.py` if present. Report per app:
+For each app repo: list the hosts its code calls (base URLs in both platforms; config files like
+`project.yml` build settings count), find `NSPinnedDomains` and every `network_security_config*.xml`
+(including `src/debug/`), run `check_pins.py` if present. Hosts the user types in (self-hosted
+servers) cannot be pinned; pin only the default host we run. Report per app:
 hosts we own, pinned on iOS (yes/no/wrong), pinned on Android, debug-overrides OK, daily check
 present. "Android ignores user CAs since targetSdk 24" is not pinning: rooted phones with a system
 CA, and every iPhone, still read the traffic.
@@ -170,6 +172,7 @@ CA, and every iPhone, still read the traffic.
 | No Android `expiration` | An old install can never recover if all pinned CAs go away. |
 | Pinning Firebase/Clerk/Sentry/CDN hosts | Login, analytics or images break when they rotate. |
 | Different lists on iOS and Android | One platform breaks alone; nobody notices until users report it. |
+| A `src/debug/res/xml/network_security_config.xml` (e.g. cleartext for `10.0.2.2`) next to the pinned `src/main` one | The debug file replaces the main one whole in debug builds: no pins there, so the wrong-pin test passes for the wrong reason. Put the pins in the debug file too (or one main file with the local hosts) and run `check_pins.py` on each file. |
 | Custom `sslSocketFactory`/`TrustManager` in OkHttp | Network security config no longer applies; pins silently ignored. |
 | Changing the backend host (custom domain, new worker) without moving the pins | The new host is unpinned, or the app cannot connect. |
 | Only testing that the app still connects | Proves nothing about pinning; always run the wrong-pin test. |

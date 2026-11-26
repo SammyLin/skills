@@ -71,6 +71,24 @@ def android_pins(path: Path):
                 exps.append(ps.get("expiration"))
             for h in hosts:
                 out.setdefault(h, set()).update(pins)
+    main = path.as_posix()
+    if "/src/main/" in main:
+        variant = Path(main.replace("/src/main/", "/src/debug/"))
+        if variant.exists():
+            vroot = ET.parse(variant).getroot()
+            vpins = {}
+            for dc in vroot.iter("domain-config"):
+                for ps in dc.findall("pin-set"):
+                    for d in dc.findall("domain"):
+                        vpins.setdefault(d.text.strip(), set()).update(p.text.strip() for p in ps.findall("pin"))
+            mpins = {}
+            for dc in root.iter("domain-config"):
+                for ps in dc.findall("pin-set"):
+                    for d in dc.findall("domain"):
+                        mpins.setdefault(d.text.strip(), set()).update(p.text.strip() for p in ps.findall("pin"))
+            if vpins != mpins:
+                problems.append(f"{variant} replaces this file in debug builds and does not carry the same "
+                                "pins: copy the pin-sets into it, or the wrong-pin test proves nothing.")
     for do in root.iter("debug-overrides"):
         for c in do.iter("certificates"):
             if c.get("src") == "system":
