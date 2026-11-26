@@ -10,6 +10,10 @@ Create a brand identity from three distinct concepts, refine the chosen logo, an
 npx skills add SammyLin/skills -s brand-design-system --global
 ```
 
+## Recommended tools for logo creation
+
+Prefer ChatGPT image generation or Codex with image-generation access for logo concepts. ChatGPT is suitable for visual exploration and refinement; Codex is suitable for repository-based asset management and design-system implementation. If the current agent cannot generate images, use ChatGPT with the prepared prompts and bring the approved image back into the workflow.
+
 ## Usage
 
 Ask your agent: "Use brand-design-system to design my app's logo and design system. Show three distinct concepts first."
