@@ -11,6 +11,9 @@ Identify product name, purpose, audiences, markets, languages, existing brand as
 ## 2. Explore identity directions
 When no logo is approved, propose three genuinely distinct directions (e.g. mascot, abstract symbol, typographic mark). Vary silhouette, composition and visual language, not merely color or accessories. Use an image generation capability for requested rendered logo concepts if available. Separate primary identity from app icons and decorative illustrations. Give each option a stable label A/B/C and preserve the correspondence to its actual image. Show concepts on a clean background at comparable scale.
 
+### Recommended logo generation workflow
+Prefer **ChatGPT image generation or Codex with access to image generation** for creating and iterating rendered logo concepts. ChatGPT is recommended for visual exploration and conversational refinements; Codex is recommended for a repository-based workflow, asset management and design-system implementation, and may generate logo images when a suitable image-generation capability is available in that environment. Check actual capabilities before attempting generation. If the current agent lacks image generation, prepare three distinct, ready-to-use prompts for ChatGPT, ask the user to supply the selected generated image, and continue from that asset. Do not substitute an improvised programmatic SVG, emoji or text mockup for requested rendered logo concepts unless the user explicitly chooses that medium. Preserve the selected source image when handing off between tools.
+
 For international products, prefer a single globally consistent symbol and wordmark unless the user requests localized lockups. Keep local names in product copy or store metadata rather than crowding the logo. Use the exact approved spelling and capitalization.
 
 ## 3. Refine and lock the identity
