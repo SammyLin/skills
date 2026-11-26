@@ -8,10 +8,11 @@
   "plugins": [
     {
       "name": "sammylin-skills",
-      "description": "store-screenshots, humanizer-zh, grill-me, peer-review, correct, web-validate, mobile-app-design, mobile-layout-stability and mobile-analytics (my own), humanizer, ip-as-logo, and the taste-skill classics for frontend art direction.",
+      "description": "brand-design-system, store-screenshots, humanizer-zh, grill-me, peer-review, correct, web-validate, mobile-app-design, mobile-layout-stability and mobile-analytics (my own), humanizer, ip-as-logo, and the taste-skill classics for frontend art direction.",
       "version": "0.1.0",
       "source": "./",
       "skills": [
+        "./skills/brand-design-system",
         "./skills/correct",
         "./skills/design-taste-frontend-v1",
         "./skills/design-taste-frontend-v2-experimental",

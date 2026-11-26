@@ -11,6 +11,7 @@ Documented in English and Traditional Chinese; they answer in the language you w
 
 | Skill | What it does | Origin |
 | --- | --- | --- |
+| [`brand-design-system`](skills/brand-design-system/) | Three distinct logo concepts, approved brand identity, offline HTML design system with the actual logo, UI foundations, components, JSON tokens and ZIP. | Mine |
 | [`store-screenshots`](skills/store-screenshots/) | App Store / Google Play screenshot sets: benefits found in the code, a storyboard you approve before anything renders, exact store sizes from real app screens, a gate and a critique. Localized. | Redesigned from [adamlyttleapps](https://github.com/adamlyttleapps/claude-skill-aso-appstore-screenshots) with ideas from [taste-skill](https://github.com/leonxlnx/taste-skill), [shots](https://github.com/hypersocialinc/shots), [store-screenshots](https://github.com/LeeHueeng/store-screenshots) |
 | [`humanizer-zh`](skills/humanizer-zh/) | Takes the AI flavour out of Chinese text for Taiwanese readers: 49 patterns, full-width punctuation, mainland-term glossary, plus a mechanical checker. | Built on [nagameTW/formosa-humanizer](https://github.com/nagameTW/formosa-humanizer), MIT |
 | [`grill-me`](skills/grill-me/) | Stress-tests a plan before you build: asks about major and medium decisions as pick-an-option questions, follows up on what each answer changes, decides only the small stuff, writes an ADR when one is earned. | Adapted from Matt Pocock's [`grill-with-docs`](https://github.com/mattpocock/skills), MIT |

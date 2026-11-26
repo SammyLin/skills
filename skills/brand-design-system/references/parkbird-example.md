@@ -1,0 +1,7 @@
+# Worked example: ParkBird
+
+The source workflow iterated from three logo concepts through user selection and corrections to a portable HTML guide and JSON tokens. The final reference was a cheerful yellow bird with cream belly, orange beak and feet, navy outline and blue P cap, with a flight curve and park imagery. The user preferred the original illustrated international C concept, not a replacement abstract airline-like bird. They requested the English-only ParkBird wordmark, then selected a two-color wordmark, and corrected the unwanted orange patch on the bird's belly.
+
+The design system used ParkBird as global identity and kept local names (樂園鳥, 乐园鸟, パークバード, 파크버드) out of the logo. Target markets: Japan, Korea, Southeast Asia and Chinese-language audiences. The mascot is best used selectively so functional park information stays prominent.
+
+Proposed brand tokens: navy #082D5D, red #F12B0B, yellow #FFD33D, sky #29A9ED, orange #FF9800, cream #FFF8E5. UI roles were separate; typography 12/14/16/20/24/32, spacing 4/8/12/16/24/32/48, radius 8/12/16/24. Product components included search, country filters, loading/empty/error states, and an illustrative park discovery screen. The HTML contained the actual PNG logo; vector artwork, independent symbol, app icon, full character sheet and dark mode were identified as pending. These decisions are examples, not requirements for unrelated brands.
