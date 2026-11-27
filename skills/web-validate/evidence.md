@@ -2,7 +2,8 @@
 
 Say in one line what each screenshot shows.
 
-**GitHub:** no upload API for images; give the user the file paths, or describe them in a comment.
+**GitHub:** no upload API for images; use the pr-evidence skill (commits them on the PR's branch
+and embeds them), or give the user the file paths.
 
 **Azure DevOps work item:**
 
