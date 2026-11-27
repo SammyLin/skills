@@ -4,8 +4,8 @@ description: >-
   Show in a GitHub pull request that the change works: pick the strongest kind of evidence for
   the task (GIF of the interaction > screenshots > written description with logs), record it from
   an iOS simulator, Android emulator or browser, turn video into a small GIF, and put the files
-  in the PR itself (committed on the PR's branch, linked by commit SHA, removed before a squash
-  merge so main stays clean). Use whenever a PR needs proof, screenshots or a GIF ("附 GIF",
+  in the PR itself (committed on the PR's branch under docs/pr/<number>/ and kept in the repo as
+  a record). Use whenever a PR needs proof, screenshots or a GIF ("附 GIF",
   "PR 要有截圖", "錄一下", "record a GIF", "add screenshots to the PR"), and before opening a PR
   for a UI change.
 ---
@@ -13,7 +13,8 @@ description: >-
 # pr-evidence
 
 GitHub has no API to upload images to a PR. This skill puts them in the PR another way:
-commit them on the PR's branch, embed them by commit SHA, delete them before merge.
+commit them on the PR's branch under `docs/pr/<number>/` and embed them by commit SHA. They merge
+with the PR and stay in the repo as a record of what each change looked like.
 
 ## 1. Pick the evidence
 
@@ -61,10 +62,12 @@ a failed recording: fix and record again.
 ## 3. Make the GIF
 
 ```bash
-scripts/to-gif.sh /tmp/ev/flow.mp4 /tmp/ev/flow.gif   # [width=360] [fps=12] [max_mb=8]
+scripts/to-gif.sh /tmp/ev/flow.mp4 /tmp/ev/flow.gif   # [width=320] [fps=10] [max_mb=8]
 ```
 Trim first if it runs long (`ffmpeg -ss 2 -t 8 -i in.mp4 -c copy out.mp4`): 5–15 s showing just the
 change. GitHub doesn't show images of 10 MB or more; the script shrinks until it's under 8 MB.
+The files stay in the repo, so keep them small: one short GIF per flow, screenshots resized to
+about 480 px wide (`sips -Z 960 shot.png` keeps the longer side at 960 px).
 
 ## 4. Put it in the PR
 
@@ -73,7 +76,7 @@ On the PR's branch, inside the repo:
 scripts/attach.sh <pr-number> /tmp/ev/flow.gif /tmp/ev/before.png /tmp/ev/after.png
 ```
 It commits them to `docs/pr/<pr-number>/`, pushes, and prints Markdown image links pinned to that
-commit. Put them in the PR description (`gh pr edit <n> --body-file ...`) under a heading per
+commit (they keep working even if the files are moved or deleted later). Put them in the PR description (`gh pr edit <n> --body-file ...`) under a heading per
 platform, one line each saying what it shows:
 
 ```markdown
@@ -90,17 +93,9 @@ Check the files landed: `gh api "repos/<owner>/<repo>/contents/docs/pr/<n>/<file
 Don't test the image links with curl: on a private repo they 404 without a browser session, yet
 show in the PR for anyone signed in with access. Ask the user to look once the first time.
 
-## 5. Before merge
+## 5. Merge
 
-```bash
-scripts/detach.sh <pr-number>
-```
-Removes `docs/pr/<pr-number>/` in a new commit. With a **squash merge** main never gets the files,
-and the PR's images keep working (the links point at the earlier commit, which GitHub keeps).
-
-Check how the repo merges once: `gh api repos/{owner}/{repo} --jq '{squash:.allow_squash_merge,merge:.allow_merge_commit,rebase:.allow_rebase_merge}'`.
-If PRs are merged with merge commits or rebase, the files stay in main's history even after
-`detach.sh`: tell the user, and keep GIFs short.
+Nothing to do: the files merge with the PR and stay in `docs/pr/<pr-number>/`.
 
 ## Rules
 

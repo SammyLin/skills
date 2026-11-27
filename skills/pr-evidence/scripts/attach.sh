@@ -1,9 +1,8 @@
 #!/usr/bin/env bash
 # Commit evidence files onto the PR's branch and print Markdown that shows them in the PR.
 #   attach.sh <pr-number> <file>...        run inside the repo, on the PR's branch
-# Files go to docs/pr/<pr-number>/ (the folder is removed before merge: detach.sh). Links point at the
-# commit SHA, so they keep working after the folder is deleted and after the branch is gone
-# (GitHub keeps every PR commit under refs/pull/<n>/head).
+# Files go to docs/pr/<pr-number>/ and stay in the repo as a record. Links point at the commit SHA,
+# so they keep working even if the files are moved or deleted later (GitHub keeps every PR commit).
 set -euo pipefail
 pr=$1; shift
 [ $# -gt 0 ] || { echo "usage: attach.sh <pr-number> <file>..." >&2; exit 1; }
@@ -18,7 +17,7 @@ dir=docs/pr/$pr
 mkdir -p "$dir"
 cp "$@" "$dir/"
 git add "$dir"
-git commit -q -m "PR #$pr evidence (removed before merge)" -- "$dir"
+git commit -q -m "PR #$pr evidence" -- "$dir"
 git push -q
 sha=$(git rev-parse HEAD)
 repo=$(gh repo view --json nameWithOwner -q .nameWithOwner)

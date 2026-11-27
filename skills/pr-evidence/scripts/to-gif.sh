@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 # Turn a screen recording (mp4/mov) into a GIF small enough for a PR.
-#   to-gif.sh <video> <out.gif> [width=360] [fps=12] [max_mb=8]
+#   to-gif.sh <video> <out.gif> [width=320] [fps=10] [max_mb=8]
 # Two-pass palette for clean colours; if the GIF is over max_mb it retries narrower and slower.
 set -euo pipefail
-in=$1 out=$2 width=${3:-360} fps=${4:-12} max_mb=${5:-8}
+in=$1 out=$2 width=${3:-320} fps=${4:-10} max_mb=${5:-8}
 command -v ffmpeg >/dev/null || { echo "ffmpeg missing: brew install ffmpeg" >&2; exit 1; }
 tmp=$(mktemp -d); trap 'rm -rf "$tmp"' EXIT
 for _ in 1 2 3 4; do
