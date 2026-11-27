@@ -10,13 +10,11 @@ is no screen. It records from an iOS simulator, Android emulator or browser, tur
 GIF small enough for GitHub (ffmpeg, two-pass palette), and attaches it.
 
 GitHub has no API to upload images to a PR, so the files are committed on the PR's branch under
-`docs/pr/<number>/` and embedded by commit SHA. Before merge they are removed in one more commit:
-with a squash merge main never gets them, and the images in the PR keep working because GitHub
-keeps every PR commit.
+`docs/pr/<number>/` and embedded by commit SHA. They merge with the PR and stay in the repo as a
+record of what each change looked like; GIFs are kept small (320 px, 10 fps, under 8 MB).
 
 - `scripts/to-gif.sh` video → GIF under 8 MB
 - `scripts/attach.sh` commit files on the PR's branch, print the Markdown
-- `scripts/detach.sh` remove them before merge
 
 Needs `ffmpeg`, `gh`, and Xcode or the Android SDK for the platform you record. Use it in
 Claude Code: `/pr-evidence`, or say "add a GIF to the PR".

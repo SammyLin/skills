@@ -9,12 +9,11 @@
 用 ffmpeg 轉成 GitHub 顯示得了的 GIF（兩段式調色盤，控制在 8 MB 以下），再放進 PR。
 
 GitHub 沒有上傳圖片到 PR 的 API，所以檔案 commit 到 PR 分支的 `docs/pr/<PR 號>/`，
-用 commit SHA 的連結嵌進 PR 說明。merge 前再加一個 commit 刪掉：squash merge 之後 main 不會有這些檔案，
-PR 裡的圖片照樣看得到，因為 GitHub 會保留 PR 的每個 commit。
+用 commit SHA 的連結嵌進 PR 說明。檔案跟著 PR merge、留在 repo 裡，之後可以回頭看每個改動當初的畫面；
+GIF 會壓小（寬 320 px、10 fps、8 MB 以下）。
 
 - `scripts/to-gif.sh`：影片轉 GIF（8 MB 以下）
 - `scripts/attach.sh`：把檔案 commit 到 PR 分支，印出要貼的 Markdown
-- `scripts/detach.sh`：merge 前移除
 
 需要 `ffmpeg`、`gh`，以及要錄的平台的 Xcode 或 Android SDK。在 Claude Code 裡用 `/pr-evidence`，
 或說「PR 附 GIF」。
